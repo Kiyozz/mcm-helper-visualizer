@@ -3,9 +3,10 @@ import { open } from '@tauri-apps/api/dialog'
 import { useState } from 'react'
 import { invoke } from '@tauri-apps/api'
 import { McmHelperConfig, McmHelperConfigSchema } from '@/config.ts'
+import McmContent from '@/components/mcm/mcm-content.tsx'
 
 function App() {
-  const [configJson, setConfigJson] = useState<McmHelperConfig>()
+  const [mcmConfig, setMcmConfig] = useState<McmHelperConfig>()
 
   async function onClickLoadConfigJson() {
     open({
@@ -37,7 +38,7 @@ function App() {
       const parseResult = McmHelperConfigSchema.safeParse(fileAsJson)
 
       if (parseResult.success) {
-        setConfigJson(parseResult.data)
+        setMcmConfig(parseResult.data)
       } else {
         // TODO: handle error
         console.log(parseResult.error)
@@ -47,7 +48,7 @@ function App() {
 
   return (
     <>
-      <header className="">
+      <header className="sticky top-0 bg-background">
         <div className="flex justify-between">
           <Button className="m-4" onClick={onClickLoadConfigJson}>
             Load config.json
@@ -56,9 +57,9 @@ function App() {
             Refresh
           </Button>
         </div>
-
-        <div>{configJson !== undefined && JSON.stringify(configJson, undefined, 2)}</div>
       </header>
+
+      {mcmConfig && <McmContent mcmConfig={mcmConfig} />}
     </>
   )
 }

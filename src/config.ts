@@ -127,53 +127,83 @@ const zKeymapControl = z.intersection(
   ])
 )*/
 
+const HeaderSchema = z.object({
+  type: z.literal('header'),
+  text: z.string(),
+})
+
+export type McmHelperHeader = z.infer<typeof HeaderSchema>
+
+const ToggleSchema = z.object({
+  type: z.literal('toggle'),
+  text: z.string(),
+  help: z.string().optional(),
+  groupControl: z.number().min(1).optional(),
+  valueOptions: SourceSchema,
+})
+
+export type McmHelperToggle = z.infer<typeof ToggleSchema>
+
+const TextSchema = z.object({
+  type: z.literal('text'),
+  text: z.string(),
+  help: z.string().optional(),
+  action: TextControlActionSchema.optional(),
+  valueOptions: z
+    .object({
+      value: z.string(),
+    })
+    .and(TextSourceSchema)
+    .optional(),
+})
+
+export type McmHelperText = z.infer<typeof TextSchema>
+
+const SliderSchema = z.object({
+  type: z.literal('slider'),
+  text: z.string(),
+  help: z.string().optional(),
+  valueOptions: z
+    .object({
+      min: z.number(),
+      max: z.number(),
+      step: z.number(),
+      formatString: z.string().optional(),
+    })
+    .and(SourceSchema),
+})
+
+export type McmHelperSlider = z.infer<typeof SliderSchema>
+
+const EnumSchema = z.object({
+  type: z.literal('enum'),
+  text: z.string(),
+  help: z.string().optional(),
+  valueOptions: z
+    .object({
+      options: z.array(z.string()),
+      shortNames: z.array(z.string()).optional(),
+    })
+    .and(SourceSchema),
+})
+
+export type McmHelperEnum = z.infer<typeof EnumSchema>
+
 const ControlSchema = z
   .discriminatedUnion('type', [
     z.object({
       type: z.literal('empty'),
     }),
-    z.object({
-      type: z.literal('header'),
-      text: z.string(),
-    }),
-    z.object({
-      type: z.literal('text'),
-      text: z.string(),
-      help: z.string().optional(),
-      action: TextControlActionSchema.optional(),
-      valueOptions: z
-        .object({
-          value: z.string(),
-        })
-        .and(TextSourceSchema)
-        .optional(),
-    }),
-    z.object({
-      type: z.literal('toggle'),
-      text: z.string(),
-      help: z.string().optional(),
-      groupControl: z.number().min(1).optional(),
-      valueOptions: SourceSchema,
-    }),
+    HeaderSchema,
+    TextSchema,
+    ToggleSchema,
     z.object({
       type: z.literal('hiddenToggle'),
       text: z.string().optional(),
       groupControl: z.number().min(1).optional(),
       valueOptions: SourceSchema,
     }),
-    z.object({
-      type: z.literal('slider'),
-      text: z.string(),
-      help: z.string().optional(),
-      valueOptions: z
-        .object({
-          min: z.number(),
-          max: z.number(),
-          step: z.number(),
-          formatString: z.string().optional(),
-        })
-        .and(SourceSchema),
-    }),
+    SliderSchema,
     z.object({
       type: z.literal('stepper'),
       text: z.string(),
@@ -195,17 +225,7 @@ const ControlSchema = z
         })
         .and(TextSourceSchema),
     }),
-    z.object({
-      type: z.literal('enum'),
-      text: z.string(),
-      help: z.string().optional(),
-      valueOptions: z
-        .object({
-          options: z.array(z.string()),
-          shortNames: z.array(z.string()).optional(),
-        })
-        .and(SourceSchema),
-    }),
+    EnumSchema,
     z.object({
       type: z.literal('color'),
       text: z.string(),
@@ -229,6 +249,8 @@ const ControlSchema = z
       groupCondition: GroupConditionSchema.optional(),
     }),
   )
+
+export type McmHelperControl = z.infer<typeof ControlSchema>
 
 const KeyBindSchema = z.object({
   id: z.string(),
@@ -263,17 +285,23 @@ export const McmHelperConfigSchema = z
     pages: z.array(PageSchema).optional(),
     keybinds: z.array(KeyBindSchema).optional(),
   })
-  .refine(
-    (config) => {
-      if (!('pages' in config) && !('content' in config)) {
-        return false
-      }
+  .superRefine((val) => {
+    const hasPageWithSameName = val.pages?.some((page, index) => {
+      return val.pages?.some((page2, index2) => {
+        return index !== index2 && page.pageDisplayName === page2.pageDisplayName
+      })
+    })
 
-      return !('pages' in config && 'content' in config)
-    },
-    () => {
-      return { message: `You must either use "content" or "pages.content"` }
-    },
-  )
+    if (hasPageWithSameName) {
+      return {
+        message: 'Page names must be unique',
+        path: ['pages'],
+      }
+    }
+
+    return true
+  })
+
+export type McmPage = z.infer<typeof PageSchema>
 
 export type McmHelperConfig = z.infer<typeof McmHelperConfigSchema>

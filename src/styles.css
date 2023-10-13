@@ -70,8 +70,14 @@
   * {
     @apply select-none border-border;
   }
+
+  :not:is(button *) {
+    cursor: default;
+  }
+
   body {
-    @apply min-h-screen overflow-auto bg-background text-foreground;
+    @apply min-h-screen bg-background text-foreground;
+    overflow-y: scroll;
   }
   #root {
     @apply min-h-screen;

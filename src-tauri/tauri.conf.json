@@ -35,8 +35,10 @@
         "fullscreen": false,
         "resizable": true,
         "title": "McmHelper Visual",
-        "width": 800,
-        "height": 600
+        "minWidth": 1200,
+        "minHeight": 1000,
+        "width": 1200,
+        "height": 1000
       }
     ]
   }
