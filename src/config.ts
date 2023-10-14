@@ -189,6 +189,67 @@ const EnumSchema = z.object({
 
 export type McmHelperEnum = z.infer<typeof EnumSchema>
 
+const HiddenToggleSchema = z.object({
+  type: z.literal('hiddenToggle'),
+  text: z.string().optional(),
+  groupControl: z.number().min(1).optional(),
+  valueOptions: SourceSchema,
+})
+
+export type McmHelperHiddenToggle = z.infer<typeof HiddenToggleSchema>
+
+const StepperSchema = z.object({
+  type: z.literal('stepper'),
+  text: z.string(),
+  help: z.string().optional(),
+  valueOptions: z
+    .object({
+      options: z.array(z.string()),
+    })
+    .and(SourceSchema),
+})
+
+export type McmHelperStepper = z.infer<typeof StepperSchema>
+
+const MenuSchema = z.object({
+  type: z.literal('menu'),
+  text: z.string(),
+  help: z.string().optional(),
+  valueOptions: z
+    .object({
+      options: z.array(z.string()),
+      shortNames: z.array(z.string()).optional(),
+    })
+    .and(TextSourceSchema),
+})
+
+export type McmHelperMenu = z.infer<typeof MenuSchema>
+
+const ColorSchema = z.object({
+  type: z.literal('color'),
+  text: z.string(),
+  valueOptions: SourceSchema,
+})
+
+export type McmHelperColor = z.infer<typeof ColorSchema>
+
+const KeymapSchema = z.object({
+  type: z.literal('keymap'),
+  text: z.string(),
+  help: z.string().optional(),
+  ignoreConflicts: z.boolean().default(false),
+  valueOptions: SourceSchema,
+})
+
+export type McmHelperKeymap = z.infer<typeof KeymapSchema>
+
+const InputSchema = z.object({
+  type: z.literal('input'),
+  text: z.string(),
+})
+
+export type McmHelperInput = z.infer<typeof InputSchema>
+
 const ControlSchema = z
   .discriminatedUnion('type', [
     z.object({
@@ -197,56 +258,20 @@ const ControlSchema = z
     HeaderSchema,
     TextSchema,
     ToggleSchema,
-    z.object({
-      type: z.literal('hiddenToggle'),
-      text: z.string().optional(),
-      groupControl: z.number().min(1).optional(),
-      valueOptions: SourceSchema,
-    }),
+    HiddenToggleSchema,
     SliderSchema,
-    z.object({
-      type: z.literal('stepper'),
-      text: z.string(),
-      help: z.string().optional(),
-      valueOptions: z
-        .object({
-          options: z.array(z.string()),
-        })
-        .and(SourceSchema),
-    }),
-    z.object({
-      type: z.literal('menu'),
-      text: z.string(),
-      help: z.string().optional(),
-      valueOptions: z
-        .object({
-          options: z.array(z.string()),
-          shortNames: z.array(z.string()).optional(),
-        })
-        .and(TextSourceSchema),
-    }),
+    StepperSchema,
+    MenuSchema,
     EnumSchema,
-    z.object({
-      type: z.literal('color'),
-      text: z.string(),
-      valueOptions: SourceSchema,
-    }),
-    z.object({
-      type: z.literal('keymap'),
-      text: z.string(),
-      help: z.string().optional(),
-      ignoreConflicts: z.boolean().default(false),
-      valueOptions: SourceSchema,
-    }),
-    z.object({
-      type: z.literal('input'),
-      text: z.string(),
-    }),
+    ColorSchema,
+    KeymapSchema,
+    InputSchema,
   ])
   .and(
     z.object({
       groupBehavior: GroupBehaviorSchema,
       groupCondition: GroupConditionSchema.optional(),
+      position: z.number().int().min(0).max(1).default(0),
     }),
   )
 
@@ -272,6 +297,8 @@ const PageSchema = z.intersection(
     }),
   ]),
 )
+
+export type McmHelperPage = z.infer<typeof PageSchema>
 
 export const McmHelperConfigSchema = z
   .object({
