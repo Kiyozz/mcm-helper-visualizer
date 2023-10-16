@@ -4,30 +4,64 @@ import { Button } from '@/components/ui/button.tsx'
 import { useMcm } from '@/hooks/mcm/use-mcm.tsx'
 import { getHexColorFromText, removeColorTagFromText } from '@/lib/color-from-text.tsx'
 import ControlTextTooltip from '@/components/mcm/control-text-tooltip.tsx'
+import { Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog.tsx'
+import { Slider as SliderUi } from '@/components/ui/slider.tsx'
+import { useState } from 'react'
 
 export default function Slider({ control }: { control: McmHelperSlider }) {
   const { t } = useMcm()
   const text = t(control.text)
-  const digitString = Number(text.match(/{(\d+)}/)?.[1])
+  const digitString = Number(control.valueOptions.formatString?.match(/{(\d+)}/)?.[1])
   const digit = Number.isNaN(digitString) ? undefined : digitString
+  const [currentValue, setCurrentValue] = useState(Number(control.valueOptions.defaultValue ?? control.valueOptions.min))
 
   return (
-    <div className="flex h-8 items-center pl-3">
-      <ControlTextTooltip controlText={control.text} asChild>
-        <span className="grow" style={{ color: getHexColorFromText(text) }}>
-          {removeColorTagFromText(text)}
-        </span>
-      </ControlTextTooltip>
-      <Button variant="ghost" className="flex items-center gap-1 p-0 text-xl hover:bg-transparent">
-        <ChevronsUpDownIcon className="mt-px h-full w-5 rotate-90" />
-        <span>
-          {typeof control.valueOptions.defaultValue === 'boolean'
-            ? control.valueOptions.defaultValue
-              ? 'Yes'
-              : 'No'
-            : (control.valueOptions.defaultValue ?? 0).toFixed(digit ?? 0)}
-        </span>
-      </Button>
-    </div>
+    <Dialog>
+      <DialogTrigger className="flex h-8 items-center pl-3 text-left">
+        <ControlTextTooltip controlText={control.text} asChild>
+          <span className="grow" style={{ color: getHexColorFromText(text) }}>
+            {removeColorTagFromText(text)}
+          </span>
+        </ControlTextTooltip>
+        <Button asChild variant="ghost" className="flex h-8 items-center gap-1 p-0 text-xl hover:bg-transparent">
+          <span>
+            <ChevronsUpDownIcon className="mt-px h-full w-5 rotate-90" />
+            <span>
+              {typeof control.valueOptions.defaultValue === 'boolean'
+                ? control.valueOptions.defaultValue
+                  ? 'Yes'
+                  : 'No'
+                : (control.valueOptions.defaultValue ?? control.valueOptions.min).toFixed(digit ?? 0)}
+            </span>
+          </span>
+        </Button>
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-lg">
+        <DialogHeader>
+          <DialogTitle className="text-center uppercase">{removeColorTagFromText(text)}</DialogTitle>
+        </DialogHeader>
+        <div>
+          <div className="flex justify-center py-3 text-xl">{currentValue}</div>
+          <SliderUi
+            value={[currentValue]}
+            min={control.valueOptions.min}
+            max={control.valueOptions.max}
+            step={control.valueOptions.step}
+            onValueChange={([value]: [number]) => setCurrentValue(value)}
+          />
+        </div>
+        <DialogFooter>
+          <Button variant="ghost" className="mr-auto">
+            Default
+          </Button>
+          <DialogClose asChild>
+            <Button>Accept</Button>
+          </DialogClose>
+          <DialogClose asChild>
+            <Button variant="ghost">Cancel</Button>
+          </DialogClose>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   )
 }

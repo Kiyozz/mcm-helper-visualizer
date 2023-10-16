@@ -7,6 +7,7 @@ import McmContent from '@/components/mcm/mcm-content.tsx'
 import { Translations } from '@/lib/translations.ts'
 import McmProvider from '@/hooks/mcm/use-mcm.tsx'
 import { invoke } from '@tauri-apps/api'
+import { cn } from '@/lib/utils.ts'
 
 async function readTranslationsFromPath(path: string) {
   const translations: Record<string, string> | null = await invoke('read_translations', { path })
@@ -38,8 +39,40 @@ async function pathExists(path: string) {
 }
 
 function App() {
+  const [lastMcmConfigPath, setLastMcmConfigPath] = useState<string>()
   const [mcmConfig, setMcmConfig] = useState<McmHelperConfig>()
   const [translations, setTranslations] = useState<Translations>()
+
+  async function loadConfig(configPath: string) {
+    const fileAsJson = await readConfigFromPath(configPath)
+
+    const parseResult = McmHelperConfigSchema.safeParse(fileAsJson)
+
+    if (parseResult.success) {
+      try {
+        const modName = await path.basename(await path.dirname(configPath))
+        const translationsFile = await path.resolve(configPath, '../../../../Interface/Translations', `${modName}_english.txt`)
+
+        if (!(await pathExists(translationsFile))) {
+          console.log('Translations file does not exist for this config.json')
+
+          return
+        }
+
+        const translations = await readTranslationsFromPath(translationsFile)
+
+        setTranslations(translations)
+      } catch (error) {
+        console.error(error)
+      }
+
+      setLastMcmConfigPath(configPath)
+      setMcmConfig(parseResult.data)
+    } else {
+      // TODO: handle error
+      console.log(parseResult.error)
+    }
+  }
 
   async function onClickLoadConfigJson() {
     open({
@@ -55,33 +88,7 @@ function App() {
     }).then(async (configPath) => {
       if (Array.isArray(configPath) || configPath === null) return
 
-      const fileAsJson = await readConfigFromPath(configPath)
-
-      const parseResult = McmHelperConfigSchema.safeParse(fileAsJson)
-
-      if (parseResult.success) {
-        try {
-          const modName = await path.basename(await path.dirname(configPath))
-          const translationsFile = await path.resolve(configPath, '../../../../Interface/Translations', `${modName}_english.txt`)
-
-          if (!(await pathExists(translationsFile))) {
-            console.log('Translations file does not exist for this config.json')
-
-            return
-          }
-
-          const translations = await readTranslationsFromPath(translationsFile)
-
-          setTranslations(translations)
-        } catch (error) {
-          console.error(error)
-        }
-
-        setMcmConfig(parseResult.data)
-      } else {
-        // TODO: handle error
-        console.log(parseResult.error)
-      }
+      await loadConfig(configPath)
     })
   }
 
@@ -102,17 +109,32 @@ function App() {
     })
   }
 
+  async function onClickRefresh() {
+    if (!lastMcmConfigPath) return
+
+    await loadConfig(lastMcmConfigPath)
+  }
+
   return (
     <>
-      <header className="sticky top-0 bg-background">
+      <header className={cn(mcmConfig === undefined ? 'flex h-screen flex-col items-center justify-center' : 'sticky top-0 bg-background')}>
+        {mcmConfig === undefined && <h1 className="text-xl">Welcome to McmHelper Visual. Load your McmHelper config.json here</h1>}
         <div className="flex justify-between p-4">
           <div className="flex gap-4">
-            <Button onClick={onClickLoadConfigJson}>Load config.json</Button>
-            <Button variant="secondary" onClick={onClickLoadTranslations} disabled={mcmConfig === undefined}>
-              Load Translations
+            <Button onClick={onClickLoadConfigJson} size={mcmConfig === undefined ? 'lg' : undefined}>
+              Load config.json
             </Button>
+            {mcmConfig && (
+              <>
+                <Button onClick={onClickLoadTranslations} variant="secondary">
+                  Load translations
+                </Button>
+                <Button variant="ghost" onClick={onClickRefresh}>
+                  Refresh
+                </Button>
+              </>
+            )}
           </div>
-          <Button variant="ghost">Refresh</Button>
         </div>
       </header>
 

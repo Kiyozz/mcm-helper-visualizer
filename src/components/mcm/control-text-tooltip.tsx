@@ -11,7 +11,9 @@ const ControlTextTooltip = forwardRef<ElementRef<typeof TooltipTrigger>, { contr
             {children}
           </TooltipTrigger>
           <TooltipContent
-            onClick={async () => {
+            onClick={async (evt) => {
+              evt.stopPropagation()
+
               await clipboard.writeText(controlText)
             }}
           >

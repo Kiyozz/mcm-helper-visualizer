@@ -34,10 +34,11 @@ export default function Page() {
               !hasContentOrCustomContent(mcmConfig) && 'cursor-default',
             )}
           >
+            {!isPage(currentPage) && <ChevronRightIcon className="h-5 w-5" />}
             {t(mcmConfig.displayName)}
           </Button>
           {mcmConfig.pages?.map((page) => {
-            const active = page === currentPage
+            const active = page.pageDisplayName === (isPage(currentPage) && currentPage.pageDisplayName)
 
             return (
               <Button
