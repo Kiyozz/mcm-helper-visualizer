@@ -1,5 +1,6 @@
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger, TooltipTriggerProps } from '@/components/ui/tooltip.tsx'
 import { ElementRef, forwardRef } from 'react'
+import { clipboard } from '@tauri-apps/api'
 
 const ControlTextTooltip = forwardRef<ElementRef<typeof TooltipTrigger>, { controlText: string } & TooltipTriggerProps>(
   ({ controlText, children, ...props }, ref) => {
@@ -9,7 +10,13 @@ const ControlTextTooltip = forwardRef<ElementRef<typeof TooltipTrigger>, { contr
           <TooltipTrigger ref={ref} {...props}>
             {children}
           </TooltipTrigger>
-          <TooltipContent>{controlText}</TooltipContent>
+          <TooltipContent
+            onClick={async () => {
+              await clipboard.writeText(controlText)
+            }}
+          >
+            {controlText}
+          </TooltipContent>
         </Tooltip>
       </TooltipProvider>
     )

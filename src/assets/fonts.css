@@ -1,7 +1,7 @@
 /* font from ./Fertigo_PRO.otf */
 
 @font-face {
-  font-family: 'Fertigo PRO';
+  font-family: 'Fertigo_PRO';
   src: url('./Fertigo_PRO.otf') format('opentype');
   font-weight: normal;
   font-style: normal;

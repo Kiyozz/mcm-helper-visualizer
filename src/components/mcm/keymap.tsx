@@ -1,15 +1,13 @@
-import { McmHelperSlider } from '@/config.ts'
-import { ChevronsUpDownIcon } from 'lucide-react'
+import { McmHelperKeymap } from '@/config.ts'
 import { Button } from '@/components/ui/button.tsx'
 import { useMcm } from '@/hooks/mcm/use-mcm.tsx'
 import { getHexColorFromText, removeColorTagFromText } from '@/lib/color-from-text.tsx'
 import ControlTextTooltip from '@/components/mcm/control-text-tooltip.tsx'
+import { KeyboardIcon } from 'lucide-react'
 
-export default function Slider({ control }: { control: McmHelperSlider }) {
+export default function Keymap({ control }: { control: McmHelperKeymap }) {
   const { t } = useMcm()
   const text = t(control.text)
-  const digitString = Number(text.match(/{(\d+)}/)?.[1])
-  const digit = Number.isNaN(digitString) ? undefined : digitString
 
   return (
     <div className="flex h-8 items-center pl-3">
@@ -19,14 +17,7 @@ export default function Slider({ control }: { control: McmHelperSlider }) {
         </span>
       </ControlTextTooltip>
       <Button variant="ghost" className="flex items-center gap-1 p-0 text-xl hover:bg-transparent">
-        <ChevronsUpDownIcon className="mt-px h-full w-5 rotate-90" />
-        <span>
-          {typeof control.valueOptions.defaultValue === 'boolean'
-            ? control.valueOptions.defaultValue
-              ? 'Yes'
-              : 'No'
-            : (control.valueOptions.defaultValue ?? 0).toFixed(digit ?? 0)}
-        </span>
+        <KeyboardIcon />
       </Button>
     </div>
   )

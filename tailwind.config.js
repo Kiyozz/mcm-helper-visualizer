@@ -12,7 +12,7 @@ module.exports = {
     },
     extend: {
       fontFamily: {
-        fertigo: ['Fertigo PRO', 'sans-serif'],
+        futura: ['Fertigo_PRO', 'serif'],
       },
       colors: {
         border: 'hsl(var(--border))',

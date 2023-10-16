@@ -7,12 +7,23 @@ import { Slot } from '@radix-ui/react-slot'
 export default function Text({ control }: { control: McmHelperText }) {
   const { t } = useMcm()
   const text = t(control.text)
+  const textValue = t(control.valueOptions?.value ?? '')
 
   return (
-    <Slot className="flex h-8 cursor-pointer items-center pl-3 text-left" style={{ color: getHexColorFromText(text) }}>
-      <ControlTextTooltip controlText={control.text}>
-        <span style={{ color: getHexColorFromText(text) }}>{removeColorTagFromText(text)}</span>
-      </ControlTextTooltip>
-    </Slot>
+    <div className="flex h-8 cursor-pointer items-center justify-between whitespace-nowrap pl-3 text-left">
+      <Slot style={{ color: getHexColorFromText(text) }}>
+        <ControlTextTooltip controlText={control.text} className="justify-between overflow-hidden">
+          <span>{removeColorTagFromText(text)}</span>
+        </ControlTextTooltip>
+      </Slot>
+      {/* ici */}
+      {textValue && (
+        <Slot style={{ color: getHexColorFromText(textValue) }}>
+          <ControlTextTooltip controlText={control.valueOptions?.value ?? ''} className="justify-between">
+            <span>{removeColorTagFromText(textValue)}</span>
+          </ControlTextTooltip>
+        </Slot>
+      )}
+    </div>
   )
 }

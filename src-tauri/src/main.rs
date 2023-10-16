@@ -3,6 +3,7 @@
 
 use std::collections::HashMap;
 use std::fs;
+use std::path::Path;
 use utf16string::{WString};
 
 // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
@@ -68,9 +69,14 @@ fn read_translations(path: &str) -> Option<HashMap<String, String>> {
     }
 }
 
+#[tauri::command]
+fn path_exists(path: &str) -> bool {
+    Path::new(path).exists()
+}
+
 fn main() {
     tauri::Builder::default()
-        .invoke_handler(tauri::generate_handler![read_file, read_translations])
+        .invoke_handler(tauri::generate_handler![read_file, read_translations, path_exists])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

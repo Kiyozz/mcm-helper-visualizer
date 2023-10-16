@@ -72,6 +72,8 @@ const CustomContentSchema = z
   }),
 ])*/
 
+export type McmHelperCustomContent = z.infer<typeof CustomContentSchema>
+
 const TextSourceSchema = z
   .object({
     sourceType: z.string().optional().describe('deprecated'),
@@ -250,11 +252,15 @@ const InputSchema = z.object({
 
 export type McmHelperInput = z.infer<typeof InputSchema>
 
+const EmptySchema = z.object({
+  type: z.literal('empty'),
+})
+
+export type McmHelperEmpty = z.infer<typeof EmptySchema>
+
 const ControlSchema = z
   .discriminatedUnion('type', [
-    z.object({
-      type: z.literal('empty'),
-    }),
+    EmptySchema,
     HeaderSchema,
     TextSchema,
     ToggleSchema,

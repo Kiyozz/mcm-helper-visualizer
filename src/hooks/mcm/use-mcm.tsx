@@ -1,13 +1,16 @@
 import { createContext, Dispatch, PropsWithChildren, SetStateAction, useCallback, useContext, useState } from 'react'
-import { McmHelperConfig, McmHelperPage } from '@/config.ts'
+import { McmHelperConfig, McmHelperControl, McmHelperCustomContent, McmHelperPage } from '@/config.ts'
 import { Translations } from '@/lib/translations.ts'
+import { hasContentOrCustomContent } from '@/lib/order-page-content.ts'
 
 type Context = {
-  currentPage: [McmHelperPage | undefined, Dispatch<SetStateAction<McmHelperPage | undefined>>]
+  currentPage: [McmPage, Dispatch<SetStateAction<McmPage>>]
   mcmConfig: McmHelperConfig
   translations: Translations | undefined
   t: (keyOrText: string) => string
 }
+
+export type McmPage = McmHelperPage | McmHelperControl[] | McmHelperCustomContent | undefined
 
 const McmContext = createContext({} as Context)
 
@@ -19,7 +22,7 @@ export default function McmProvider({
   mcmConfig: McmHelperConfig
   translations: Translations | undefined
 }>) {
-  const currentPage = useState<McmHelperPage | undefined>(mcmConfig.pages?.at(0))
+  const currentPage = useState<McmPage>(hasContentOrCustomContent(mcmConfig) ? mcmConfig.customContentData ?? mcmConfig.content : mcmConfig.pages?.at(0))
 
   const t = useCallback(
     (keyOrText: string) => {

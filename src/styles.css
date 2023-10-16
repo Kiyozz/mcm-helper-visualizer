@@ -80,6 +80,7 @@
   body {
     @apply min-h-screen bg-background text-foreground;
     overflow-y: scroll;
+    overflow-x: hidden;
   }
   #root {
     @apply min-h-screen;
