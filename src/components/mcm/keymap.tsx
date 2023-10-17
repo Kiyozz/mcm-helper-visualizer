@@ -10,7 +10,7 @@ export default function Keymap({ control }: { control: McmHelperKeymap }) {
   const text = t(control.text)
 
   return (
-    <div className="flex h-8 items-center pl-3">
+    <div className="flex h-10 items-center pl-3">
       <ControlTextTooltip controlText={control.text} asChild>
         <span className="grow" style={{ color: getHexColorFromText(text) }}>
           {removeColorTagFromText(text)}

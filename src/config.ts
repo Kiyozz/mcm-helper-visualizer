@@ -59,19 +59,6 @@ const CustomContentSchema = z
   })
   .strict()
 
-/*const KeyBindControlActionSchema = z.union([
-  TextControlActionSchema,
-  z.object({
-    type: z.literal("RunConsoleCommand"),
-    command: z.string()
-  }),
-  z.object({
-    type: z.literal("SendEvent"),
-    form: z.string(),
-    scriptName: z.string()
-  }),
-])*/
-
 export type McmHelperCustomContent = z.infer<typeof CustomContentSchema>
 
 const TextSourceSchema = z
@@ -84,50 +71,30 @@ const TextSourceSchema = z
   })
   .optional()
 
+const SourceTypeSchema = z.object({
+  sourceType: z.union([z.literal('GlobalValue'), z.literal('ModSettingBool'), z.literal('ModSettingFloat'), z.literal('ModSettingInt')]),
+})
+
+const SourceTypeScriptNameSchema = z.object({
+  sourceType: z.union([z.literal('PropertyValueInt'), z.literal('PropertyValueFloat'), z.literal('PropertyValueBool')]),
+  scriptName: z.string().optional(),
+  propertyName: z.string(),
+})
+
+const SourceTypePropertyNameSchema = z.object({
+  sourceType: z.union([z.literal('PropertyValueString'), z.literal('ModSettingString')]),
+  propertyName: z.string(),
+})
+
 const SourceSchema = z
   .intersection(
-    z.union([
-      z.object({
-        sourceType: z.union([z.literal('GlobalValue'), z.literal('ModSettingBool'), z.literal('ModSettingFloat'), z.literal('ModSettingInt')]),
-      }),
-      z.object({
-        sourceType: z.union([z.literal('PropertyValueInt'), z.literal('PropertyValueFloat'), z.literal('PropertyValueBool')]),
-        scriptName: z.string().optional(),
-        propertyName: z.string(),
-      }),
-      z.object({
-        sourceType: z.union([z.literal('PropertyValueString'), z.literal('ModSettingString')]),
-        propertyName: z.string(),
-      }),
-    ]),
+    z.union([SourceTypeSchema, SourceTypeScriptNameSchema, SourceTypePropertyNameSchema]),
     z.object({
       defaultValue: z.union([z.number(), z.boolean()]).optional(),
       sourceForm: SourceFormSchema.optional(),
     }),
   )
   .optional()
-
-/*
-
-For reference only,
-zod doesn't support z.intersection in discriminated unions, so, we skip id and valueOptions for keymap controls
-
-const zKeymapControl = z.intersection(
-  z.object({
-    type: z.literal("keymap"),
-    text: z.string(),
-    help: z.string().optional(),
-    ignoreConflicts: z.boolean().default(false),
-  }),
-  z.union([
-    z.object({
-      id: z.string(),
-    }),
-    z.object({
-      valueOptions: zMcmHelperSource
-    })
-  ])
-)*/
 
 const HeaderSchema = z.object({
   type: z.literal('header'),

@@ -1,9 +1,28 @@
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger, TooltipTriggerProps } from '@/components/ui/tooltip.tsx'
-import { ElementRef, forwardRef } from 'react'
+import { ElementRef, forwardRef, useEffect, useState } from 'react'
 import { clipboard } from '@tauri-apps/api'
+import { CopyIcon } from 'lucide-react'
 
 const ControlTextTooltip = forwardRef<ElementRef<typeof TooltipTrigger>, { controlText: string } & TooltipTriggerProps>(
   ({ controlText, children, ...props }, ref) => {
+    const [hasBeenCopied, setHasBeenCopied] = useState(false)
+
+    useEffect(() => {
+      let timer: NodeJS.Timeout
+
+      if (hasBeenCopied) {
+        timer = setTimeout(() => {
+          setHasBeenCopied(false)
+        }, 2000)
+      }
+
+      return () => {
+        if (timer) {
+          clearTimeout(timer)
+        }
+      }
+    }, [hasBeenCopied])
+
     return (
       <TooltipProvider>
         <Tooltip>
@@ -15,9 +34,18 @@ const ControlTextTooltip = forwardRef<ElementRef<typeof TooltipTrigger>, { contr
               evt.stopPropagation()
 
               await clipboard.writeText(controlText)
+              setHasBeenCopied(true)
             }}
+            className="flex cursor-pointer items-center gap-2"
           >
-            {controlText}
+            {!hasBeenCopied ? (
+              <>
+                <CopyIcon className="h-4 w-4" />
+                <span>{controlText}</span>
+              </>
+            ) : (
+              <span>Copied!</span>
+            )}
           </TooltipContent>
         </Tooltip>
       </TooltipProvider>

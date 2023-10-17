@@ -5,6 +5,7 @@ import { hasContentOrCustomContent } from '@/lib/order-page-content.ts'
 
 type Context = {
   currentPage: [McmPage, Dispatch<SetStateAction<McmPage>>]
+  helpText: [string | undefined, Dispatch<SetStateAction<string | undefined>>]
   mcmConfig: McmHelperConfig
   translations: Translations | undefined
   t: (keyOrText: string) => string
@@ -23,6 +24,7 @@ export default function McmProvider({
   translations: Translations | undefined
 }>) {
   const currentPage = useState<McmPage>(hasContentOrCustomContent(mcmConfig) ? mcmConfig.customContentData ?? mcmConfig.content : mcmConfig.pages?.at(0))
+  const helpText = useState<string | undefined>()
 
   const t = useCallback(
     (keyOrText: string) => {
@@ -40,6 +42,7 @@ export default function McmProvider({
         translations,
         t,
         currentPage,
+        helpText,
       }}
     >
       {children}

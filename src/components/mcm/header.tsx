@@ -9,7 +9,7 @@ export default function Header({ control }: { control: McmHelperHeader }) {
   const text = t(control.text)
 
   return (
-    <h2 className="flex h-8 items-center gap-3 font-bold text-foreground">
+    <h2 className="flex h-10 items-center gap-3 font-bold text-foreground">
       <ControlTextTooltip controlText={control.text} asChild>
         <span style={{ color: getHexColorFromText(text) }}>{removeColorTagFromText(text)}</span>
       </ControlTextTooltip>

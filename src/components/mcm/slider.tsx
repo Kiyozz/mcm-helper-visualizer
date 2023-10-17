@@ -7,32 +7,29 @@ import ControlTextTooltip from '@/components/mcm/control-text-tooltip.tsx'
 import { Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog.tsx'
 import { Slider as SliderUi } from '@/components/ui/slider.tsx'
 import { useState } from 'react'
+import { useHelpTextHandler } from '@/hooks/mcm/use-help-text-handler.tsx'
 
 export default function Slider({ control }: { control: McmHelperSlider }) {
   const { t } = useMcm()
   const text = t(control.text)
   const digitString = Number(control.valueOptions.formatString?.match(/{(\d+)}/)?.[1])
   const digit = Number.isNaN(digitString) ? undefined : digitString
-  const [currentValue, setCurrentValue] = useState(Number(control.valueOptions.defaultValue ?? control.valueOptions.min))
+  const defaultValueToUse = typeof control.valueOptions.defaultValue === 'boolean' ? 0 : control.valueOptions.defaultValue ?? control.valueOptions.min
+  const [currentValue, setCurrentValue] = useState(defaultValueToUse)
+  const helpTextHandler = useHelpTextHandler(control.help)
 
   return (
     <Dialog>
-      <DialogTrigger className="flex h-8 items-center pl-3 text-left">
+      <DialogTrigger className="flex h-10 items-center pl-3 text-left" {...helpTextHandler}>
         <ControlTextTooltip controlText={control.text} asChild>
           <span className="grow" style={{ color: getHexColorFromText(text) }}>
             {removeColorTagFromText(text)}
           </span>
         </ControlTextTooltip>
-        <Button asChild variant="ghost" className="flex h-8 items-center gap-1 p-0 text-xl hover:bg-transparent">
+        <Button asChild variant="ghost" className="flex h-10 items-center gap-1 p-0 text-xl hover:bg-transparent">
           <span>
             <ChevronsUpDownIcon className="mt-px h-full w-5 rotate-90" />
-            <span>
-              {typeof control.valueOptions.defaultValue === 'boolean'
-                ? control.valueOptions.defaultValue
-                  ? 'Yes'
-                  : 'No'
-                : (control.valueOptions.defaultValue ?? control.valueOptions.min).toFixed(digit ?? 0)}
-            </span>
+            <span>{currentValue.toFixed(digit ?? 0)}</span>
           </span>
         </Button>
       </DialogTrigger>

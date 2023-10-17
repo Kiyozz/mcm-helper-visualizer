@@ -62,7 +62,7 @@ export default function Page() {
                 if (contentColumn === undefined) return null
 
                 return (
-                  <div key={i} className="flex flex-col gap-2 pl-8 first:pl-0 first:pr-8">
+                  <div key={i} className="flex flex-col pl-8 first:pl-0 first:pr-8">
                     {contentColumn.map((control, i) => {
                       switch (control.type) {
                         case 'header':
@@ -81,7 +81,7 @@ export default function Page() {
                           return <Empty key={i} control={control} />
                         default:
                           return (
-                            <div key={i} className="flex h-8 items-center pl-3">
+                            <div key={i} className="flex h-10 items-center pl-3">
                               {control.type}
                             </div>
                           )
