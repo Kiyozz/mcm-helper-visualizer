@@ -27,11 +27,11 @@ export default function Page() {
 
   return (
     <div className="flex flex-col">
-      <header className="font-futura pl-52 text-center text-3xl uppercase">
+      <header className="font-futura fixed left-1/2 top-[4.5rem] -translate-x-1/2 bg-background pl-52 text-center text-3xl uppercase">
         {t((isPage(currentPage) ? currentPage?.pageDisplayName : undefined) ?? mcmConfig.displayName)}
       </header>
-      <div className="grid h-full grow grid-cols-[20rem_1fr] py-8">
-        <aside className="font-futura flex flex-col overflow-hidden">
+      <div className="flex h-full grow pb-24 pt-[4.25rem]">
+        <aside className="font-futura fixed left-0 flex w-80 flex-col overflow-hidden">
           <Button
             variant="ghost"
             className={cn(
@@ -61,7 +61,7 @@ export default function Page() {
             )
           })}
         </aside>
-        <main className="font-futura mt-14 flex grow flex-col px-4 text-xl text-slate-300">
+        <main className="font-futura mt-14 flex grow flex-col pl-[21rem] pr-4 text-xl text-slate-300">
           {isPage(currentPage) && Array.isArray(pageContentToUse) && (
             <div className={cn('grid divide-x-2', pageContentToUse.length === 2 ? 'grid-cols-2' : 'grid-cols-1')}>
               {pageContentToUse.map((contentColumn, i) => {
