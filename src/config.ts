@@ -2,9 +2,9 @@ import { z } from 'zod'
 
 const SourceFormSchema = z.string().regex(/^[^\\/:*?"<>|]+\.es[lmp]\|(0[Xx])?[\dA-Fa-f]{1,8}$/)
 
-const GroupBehaviorSchema = z.union([z.literal('disable'), z.literal('hide'), z.literal('skip')]).default('disable')
+const GroupBehaviorSchema = z.union([z.literal('disable'), z.literal('hide'), z.literal('skip')]).optional()
 
-type GroupCondition =
+export type GroupCondition =
   | number
   | GroupCondition[]
   | {
@@ -32,14 +32,20 @@ const GroupConditionSchema: z.ZodType<GroupCondition> = z.union([
     }, 'At least one key must be present'),
 ])
 
+const BaseControlSchema = z.object({
+  groupBehavior: GroupBehaviorSchema,
+  groupCondition: GroupConditionSchema.optional(),
+  position: z.number().int().min(0).max(1).default(0),
+})
+
 const CursorFileModeSchema = z.enum(['topToBottom', 'leftToRight']).default('leftToRight')
 
 const TextControlActionSchema = z.union([
   z.object({
     type: z.literal('CallFunction'),
-    form: z.string(),
+    form: z.string().optional(),
     function: z.string(),
-    params: z.array(z.union([z.string(), z.number(), z.boolean()])),
+    params: z.array(z.union([z.string(), z.number(), z.boolean()])).optional(),
     sourceForm: SourceFormSchema.optional(),
     scriptName: z.string().optional(),
   }),
@@ -99,9 +105,10 @@ const SourceSchema = z
 const HeaderSchema = z.object({
   type: z.literal('header'),
   text: z.string(),
+  help: z.string().optional(),
 })
 
-export type McmHelperHeader = z.infer<typeof HeaderSchema>
+export type McmHelperHeader = z.infer<typeof HeaderSchema> & z.infer<typeof BaseControlSchema>
 
 const ToggleSchema = z.object({
   type: z.literal('toggle'),
@@ -111,7 +118,7 @@ const ToggleSchema = z.object({
   valueOptions: SourceSchema,
 })
 
-export type McmHelperToggle = z.infer<typeof ToggleSchema>
+export type McmHelperToggle = z.infer<typeof ToggleSchema> & z.infer<typeof BaseControlSchema>
 
 const TextSchema = z.object({
   type: z.literal('text'),
@@ -120,13 +127,13 @@ const TextSchema = z.object({
   action: TextControlActionSchema.optional(),
   valueOptions: z
     .object({
-      value: z.string(),
+      value: z.string().optional(),
     })
     .and(TextSourceSchema)
     .optional(),
 })
 
-export type McmHelperText = z.infer<typeof TextSchema>
+export type McmHelperText = z.infer<typeof TextSchema> & z.infer<typeof BaseControlSchema>
 
 const SliderSchema = z.object({
   type: z.literal('slider'),
@@ -142,7 +149,7 @@ const SliderSchema = z.object({
     .and(SourceSchema),
 })
 
-export type McmHelperSlider = z.infer<typeof SliderSchema>
+export type McmHelperSlider = z.infer<typeof SliderSchema> & z.infer<typeof BaseControlSchema>
 
 const EnumSchema = z.object({
   type: z.literal('enum'),
@@ -156,7 +163,7 @@ const EnumSchema = z.object({
     .and(SourceSchema),
 })
 
-export type McmHelperEnum = z.infer<typeof EnumSchema>
+export type McmHelperEnum = z.infer<typeof EnumSchema> & z.infer<typeof BaseControlSchema>
 
 const HiddenToggleSchema = z.object({
   type: z.literal('hiddenToggle'),
@@ -165,7 +172,7 @@ const HiddenToggleSchema = z.object({
   valueOptions: SourceSchema,
 })
 
-export type McmHelperHiddenToggle = z.infer<typeof HiddenToggleSchema>
+export type McmHelperHiddenToggle = z.infer<typeof HiddenToggleSchema> & z.infer<typeof BaseControlSchema>
 
 const StepperSchema = z.object({
   type: z.literal('stepper'),
@@ -178,7 +185,7 @@ const StepperSchema = z.object({
     .and(SourceSchema),
 })
 
-export type McmHelperStepper = z.infer<typeof StepperSchema>
+export type McmHelperStepper = z.infer<typeof StepperSchema> & z.infer<typeof BaseControlSchema>
 
 const MenuSchema = z.object({
   type: z.literal('menu'),
@@ -192,15 +199,16 @@ const MenuSchema = z.object({
     .and(TextSourceSchema),
 })
 
-export type McmHelperMenu = z.infer<typeof MenuSchema>
+export type McmHelperMenu = z.infer<typeof MenuSchema> & z.infer<typeof BaseControlSchema>
 
 const ColorSchema = z.object({
   type: z.literal('color'),
   text: z.string(),
+  help: z.string().optional(),
   valueOptions: SourceSchema,
 })
 
-export type McmHelperColor = z.infer<typeof ColorSchema>
+export type McmHelperColor = z.infer<typeof ColorSchema> & z.infer<typeof BaseControlSchema>
 
 const KeymapSchema = z.object({
   type: z.literal('keymap'),
@@ -210,20 +218,22 @@ const KeymapSchema = z.object({
   valueOptions: SourceSchema,
 })
 
-export type McmHelperKeymap = z.infer<typeof KeymapSchema>
+export type McmHelperKeymap = z.infer<typeof KeymapSchema> & z.infer<typeof BaseControlSchema>
 
 const InputSchema = z.object({
   type: z.literal('input'),
   text: z.string(),
+  help: z.string().optional(),
+  valueOptions: TextSourceSchema,
 })
 
-export type McmHelperInput = z.infer<typeof InputSchema>
+export type McmHelperInput = z.infer<typeof InputSchema> & z.infer<typeof BaseControlSchema>
 
 const EmptySchema = z.object({
   type: z.literal('empty'),
 })
 
-export type McmHelperEmpty = z.infer<typeof EmptySchema>
+export type McmHelperEmpty = z.infer<typeof EmptySchema> & z.infer<typeof BaseControlSchema>
 
 const ControlSchema = z
   .discriminatedUnion('type', [
@@ -240,13 +250,7 @@ const ControlSchema = z
     KeymapSchema,
     InputSchema,
   ])
-  .and(
-    z.object({
-      groupBehavior: GroupBehaviorSchema,
-      groupCondition: GroupConditionSchema.optional(),
-      position: z.number().int().min(0).max(1).default(0),
-    }),
-  )
+  .and(BaseControlSchema)
 
 export type McmHelperControl = z.infer<typeof ControlSchema>
 

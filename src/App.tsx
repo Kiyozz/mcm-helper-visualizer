@@ -44,6 +44,7 @@ function App() {
   const [translations, setTranslations] = useState<Translations>()
 
   async function loadConfig(configPath: string) {
+    setMcmConfig(undefined)
     const fileAsJson = await readConfigFromPath(configPath)
 
     const parseResult = McmHelperConfigSchema.safeParse(fileAsJson)
@@ -130,7 +131,7 @@ function App() {
                   Load translations
                 </Button>
                 <Button variant="ghost" onClick={onClickRefresh}>
-                  Refresh
+                  Reload changes
                 </Button>
               </>
             )}

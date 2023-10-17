@@ -1,4 +1,4 @@
-import { McmHelperText } from '@/config.ts'
+import { McmHelperStepper } from '@/config.ts'
 import { useMcm } from '@/hooks/mcm/use-mcm.tsx'
 import { getHexColorFromText, removeColorTagFromText } from '@/lib/color-from-text.tsx'
 import ControlTextTooltip from '@/components/mcm/control-text-tooltip.tsx'
@@ -7,10 +7,9 @@ import { useHelpTextHandler } from '@/hooks/mcm/use-help-text-handler.tsx'
 import { cn } from '@/lib/utils.ts'
 import DisplayControlGroupConfig from '@/components/mcm/display-control-group-config.tsx'
 
-export default function Text({ control, isAfterHeader }: { control: McmHelperText; isAfterHeader: boolean }) {
+export default function Stepper({ control, isAfterHeader }: { control: McmHelperStepper; isAfterHeader: boolean }) {
   const { t } = useMcm()
   const text = t(control.text)
-  const textValue = t(control.valueOptions?.value ?? '')
   const helpTextHandler = useHelpTextHandler(control.help)
 
   return (
@@ -21,13 +20,7 @@ export default function Text({ control, isAfterHeader }: { control: McmHelperTex
           <DisplayControlGroupConfig control={control} />
         </ControlTextTooltip>
       </Slot>
-      {textValue && (
-        <Slot style={{ color: getHexColorFromText(textValue) }}>
-          <ControlTextTooltip controlText={control.valueOptions?.value ?? ''} className="justify-between">
-            <span>{removeColorTagFromText(textValue)}</span>
-          </ControlTextTooltip>
-        </Slot>
-      )}
+      <div className="flex items-center gap-2 overflow-hidden whitespace-nowrap">Stepper</div>
     </div>
   )
 }

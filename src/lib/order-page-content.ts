@@ -4,7 +4,10 @@ import { McmPage } from '@/hooks/mcm/use-mcm.tsx'
 export function hasContentOrCustomContent<T extends McmHelperConfig>(
   mcmConfig: T,
 ): mcmConfig is T & ({ content: McmHelperControl[] } | { customContentData: McmHelperCustomContent }) {
-  return 'content' in mcmConfig || 'customContentData' in mcmConfig
+  return (
+    ('content' in mcmConfig && mcmConfig.content !== undefined && mcmConfig.content.length > 0) ||
+    ('customContentData' in mcmConfig && mcmConfig.customContentData !== undefined)
+  )
 }
 
 export function isPage(pageOrContent: McmPage): pageOrContent is McmHelperPage {

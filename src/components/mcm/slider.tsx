@@ -8,8 +8,10 @@ import { Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogT
 import { Slider as SliderUi } from '@/components/ui/slider.tsx'
 import { useState } from 'react'
 import { useHelpTextHandler } from '@/hooks/mcm/use-help-text-handler.tsx'
+import { cn } from '@/lib/utils.ts'
+import DisplayControlGroupConfig from '@/components/mcm/display-control-group-config.tsx'
 
-export default function Slider({ control }: { control: McmHelperSlider }) {
+export default function Slider({ control, isAfterHeader }: { control: McmHelperSlider; isAfterHeader: boolean }) {
   const { t } = useMcm()
   const text = t(control.text)
   const digitString = Number(control.valueOptions.formatString?.match(/{(\d+)}/)?.[1])
@@ -20,10 +22,11 @@ export default function Slider({ control }: { control: McmHelperSlider }) {
 
   return (
     <Dialog>
-      <DialogTrigger className="flex h-10 items-center pl-3 text-left" {...helpTextHandler}>
+      <DialogTrigger className={cn('flex h-10 items-center text-left', isAfterHeader && 'pl-3')} {...helpTextHandler}>
         <ControlTextTooltip controlText={control.text} asChild>
-          <span className="grow" style={{ color: getHexColorFromText(text) }}>
-            {removeColorTagFromText(text)}
+          <span className="flex grow items-center gap-2 overflow-hidden whitespace-nowrap" style={{ color: getHexColorFromText(text) }}>
+            <span>{removeColorTagFromText(text)}</span>
+            <DisplayControlGroupConfig control={control} />
           </span>
         </ControlTextTooltip>
         <Button asChild variant="ghost" className="flex h-10 items-center gap-1 p-0 text-xl hover:bg-transparent">
@@ -44,7 +47,9 @@ export default function Slider({ control }: { control: McmHelperSlider }) {
             min={control.valueOptions.min}
             max={control.valueOptions.max}
             step={control.valueOptions.step}
-            onValueChange={([value]: [number]) => setCurrentValue(value)}
+            onValueChange={([value]: [number]) => {
+              setCurrentValue(value)
+            }}
           />
         </div>
         <DialogFooter>

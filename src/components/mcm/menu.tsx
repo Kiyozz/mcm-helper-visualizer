@@ -1,4 +1,4 @@
-import { McmHelperEnum } from '@/config.ts'
+import { McmHelperMenu } from '@/config.ts'
 import { DiamondIcon } from 'lucide-react'
 import { useMcm } from '@/hooks/mcm/use-mcm.tsx'
 import { getHexColorFromText, removeColorTagFromText } from '@/lib/color-from-text.tsx'
@@ -10,12 +10,12 @@ import { useState } from 'react'
 import { cn } from '@/lib/utils.ts'
 import DisplayControlGroupConfig from '@/components/mcm/display-control-group-config.tsx'
 
-export default function Enum({ control, isAfterHeader }: { control: McmHelperEnum; isAfterHeader: boolean }) {
+export default function Menu({ control, isAfterHeader }: { control: McmHelperMenu; isAfterHeader: boolean }) {
   const { t } = useMcm()
   const text = t(control.text)
   const helpTextHandler = useHelpTextHandler(control.help)
   const { defaultValue, options, shortNames } = control.valueOptions
-  const defaultKeyToUse = (shortNames ?? options).at(0) ?? (shortNames ?? options).at(defaultValue === true ? 0 : defaultValue || 0) ?? 'value'
+  const defaultKeyToUse = defaultValue ?? (shortNames ?? options).at(0) ?? 'value'
   const [currentValue, setCurrentValue] = useState<string>(defaultKeyToUse)
   const textToUse = t(currentValue)
 
