@@ -10,19 +10,28 @@ import { useState } from 'react'
 import { useHelpTextHandler } from '@/hooks/mcm/use-help-text-handler.tsx'
 import { cn } from '@/lib/utils.ts'
 import DisplayControlGroupConfig from '@/components/mcm/display-control-group-config.tsx'
+import { classnameByGroupBehavior } from '@/lib/classname-by-group-behavior.ts'
 
 export default function Slider({ control, isAfterHeader }: { control: McmHelperSlider; isAfterHeader: boolean }) {
-  const { t } = useMcm()
+  const { t, evaluateCondition } = useMcm()
   const text = t(control.text)
   const digitString = Number(control.valueOptions.formatString?.match(/{(\d+)}/)?.[1])
   const digit = Number.isNaN(digitString) ? undefined : digitString
   const defaultValueToUse = typeof control.valueOptions.defaultValue === 'boolean' ? 0 : control.valueOptions.defaultValue ?? control.valueOptions.min
   const [currentValue, setCurrentValue] = useState(defaultValueToUse)
   const helpTextHandler = useHelpTextHandler(control.help)
+  const isControlEvaluated = evaluateCondition(control.groupCondition)
 
   return (
     <Dialog>
-      <DialogTrigger className={cn('flex h-10 items-center text-left', isAfterHeader && 'pl-3')} {...helpTextHandler}>
+      <DialogTrigger
+        className={cn(
+          'flex h-10 items-center text-left',
+          isAfterHeader && 'pl-3',
+          isControlEvaluated !== undefined && !isControlEvaluated && classnameByGroupBehavior(control.groupBehavior),
+        )}
+        {...helpTextHandler}
+      >
         <ControlTextTooltip controlText={control.text} asChild>
           <span className="flex grow items-center gap-2 overflow-hidden whitespace-nowrap" style={{ color: getHexColorFromText(text) }}>
             <span>{removeColorTagFromText(text)}</span>

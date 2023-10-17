@@ -4,13 +4,15 @@ const SourceFormSchema = z.string().regex(/^[^\\/:*?"<>|]+\.es[lmp]\|(0[Xx])?[\d
 
 const GroupBehaviorSchema = z.union([z.literal('disable'), z.literal('hide'), z.literal('skip')]).optional()
 
+export type GroupBehavior = z.infer<typeof GroupBehaviorSchema>
+
 export type GroupCondition =
   | number
   | GroupCondition[]
   | {
       OR?: GroupCondition
       AND?: GroupCondition
-      ONLY?: GroupCondition
+      ONLY?: number[]
       NOT?: GroupCondition
     }
 
@@ -21,7 +23,7 @@ const GroupConditionSchema: z.ZodType<GroupCondition> = z.union([
     .object({
       OR: z.lazy(() => GroupConditionSchema),
       AND: z.lazy(() => GroupConditionSchema),
-      ONLY: z.lazy(() => GroupConditionSchema),
+      ONLY: z.array(z.number().int().min(1)),
       NOT: z.lazy(() => GroupConditionSchema),
     })
     .partial()

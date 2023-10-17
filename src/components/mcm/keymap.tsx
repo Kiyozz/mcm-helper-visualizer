@@ -7,14 +7,23 @@ import { KeyboardIcon } from 'lucide-react'
 import { cn } from '@/lib/utils.ts'
 import DisplayControlGroupConfig from '@/components/mcm/display-control-group-config.tsx'
 import { useHelpTextHandler } from '@/hooks/mcm/use-help-text-handler.tsx'
+import { classnameByGroupBehavior } from '@/lib/classname-by-group-behavior.ts'
 
 export default function Keymap({ control, isAfterHeader }: { control: McmHelperKeymap; isAfterHeader: boolean }) {
-  const { t } = useMcm()
+  const { t, evaluateCondition } = useMcm()
   const text = t(control.text)
   const helpTextHandler = useHelpTextHandler(control.help)
+  const isControlEvaluated = evaluateCondition(control.groupCondition)
 
   return (
-    <div className={cn('flex h-10 items-center', isAfterHeader && 'pl-3')} {...helpTextHandler}>
+    <div
+      className={cn(
+        'flex h-10 items-center',
+        isControlEvaluated !== undefined && !isControlEvaluated && classnameByGroupBehavior(control.groupBehavior),
+        isAfterHeader && 'pl-3',
+      )}
+      {...helpTextHandler}
+    >
       <ControlTextTooltip controlText={control.text} asChild>
         <span className="flex grow items-center gap-2 overflow-hidden whitespace-nowrap" style={{ color: getHexColorFromText(text) }}>
           <span>{removeColorTagFromText(text)}</span>

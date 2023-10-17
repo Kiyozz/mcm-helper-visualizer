@@ -9,15 +9,17 @@ import { Button } from '@/components/ui/button.tsx'
 import { useState } from 'react'
 import { cn } from '@/lib/utils.ts'
 import DisplayControlGroupConfig from '@/components/mcm/display-control-group-config.tsx'
+import { classnameByGroupBehavior } from '@/lib/classname-by-group-behavior.ts'
 
 export default function Menu({ control, isAfterHeader }: { control: McmHelperMenu; isAfterHeader: boolean }) {
-  const { t } = useMcm()
+  const { t, evaluateCondition } = useMcm()
   const text = t(control.text)
   const helpTextHandler = useHelpTextHandler(control.help)
   const { defaultValue, options, shortNames } = control.valueOptions
   const defaultKeyToUse = defaultValue ?? (shortNames ?? options).at(0) ?? 'value'
   const [currentValue, setCurrentValue] = useState<string>(defaultKeyToUse)
   const textToUse = t(currentValue)
+  const isControlEvaluated = evaluateCondition(control.groupCondition)
 
   return (
     <Dialog
@@ -28,7 +30,14 @@ export default function Menu({ control, isAfterHeader }: { control: McmHelperMen
       }}
     >
       <DialogTrigger asChild>
-        <button className={cn('flex h-10 cursor-pointer items-center text-left', isAfterHeader && 'pl-3')} {...helpTextHandler}>
+        <button
+          className={cn(
+            'flex h-10 cursor-pointer items-center text-left',
+            isControlEvaluated !== undefined && !isControlEvaluated && classnameByGroupBehavior(control.groupBehavior),
+            isAfterHeader && 'pl-3',
+          )}
+          {...helpTextHandler}
+        >
           <ControlTextTooltip controlText={control.text} asChild>
             <span className="flex grow items-center gap-2 overflow-hidden whitespace-nowrap" style={{ color: getHexColorFromText(text) }}>
               <span>{removeColorTagFromText(text)}</span>

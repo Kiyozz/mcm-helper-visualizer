@@ -8,16 +8,25 @@ import { useHelpTextHandler } from '@/hooks/mcm/use-help-text-handler.tsx'
 import { cn } from '@/lib/utils.ts'
 import DisplayControlGroupConfig from '@/components/mcm/display-control-group-config.tsx'
 import DisplayControlGroupControlConfig from '@/components/mcm/display-control-group-control-config.tsx'
+import { classnameByGroupBehavior } from '@/lib/classname-by-group-behavior.ts'
 
 export default function Toggle({ control, isAfterHeader }: { control: McmHelperToggle; isAfterHeader: boolean }) {
   const id = useId()
-  const { t } = useMcm()
+  const { t, evaluateCondition } = useMcm()
 
   const text = t(control.text)
   const helpTextHandler = useHelpTextHandler(control.help)
+  const isControlEvaluated = evaluateCondition(control.groupCondition)
 
   return (
-    <div className={cn('flex h-10 items-center gap-x-2', isAfterHeader && 'pl-3')} {...helpTextHandler}>
+    <div
+      className={cn(
+        'flex h-10 items-center gap-x-2',
+        isControlEvaluated !== undefined && !isControlEvaluated && classnameByGroupBehavior(control.groupBehavior),
+        isAfterHeader && 'pl-3',
+      )}
+      {...helpTextHandler}
+    >
       <ControlTextTooltip controlText={control.text} asChild>
         <label
           htmlFor={id}
