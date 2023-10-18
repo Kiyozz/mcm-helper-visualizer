@@ -2,14 +2,14 @@ import { McmHelperToggle } from '@/config.ts'
 import { useId } from 'react'
 import { Checkbox } from '@/components/ui/checkbox.tsx'
 import { getHexColorFromText, removeColorTagFromText } from '@/lib/color-from-text.tsx'
-import ControlTextTooltip from '@/components/mcm/control-text-tooltip.tsx'
-import { useHelpTextHandler } from '@/hooks/use-help-text-handler.ts'
+import ControlTextTooltip from '@/components/page/control-text-tooltip.tsx'
 import { cn } from '@/lib/utils.ts'
-import DisplayControlGroupConfig from '@/components/mcm/display-control-group-config.tsx'
-import DisplayControlGroupControlConfig from '@/components/mcm/display-control-group-control-config.tsx'
+import DisplayControlGroupConfig from '@/components/page/display-control-group-config.tsx'
+import DisplayControlGroupControlConfig from '@/components/page/display-control-group-control-config.tsx'
 import { classnameByGroupBehavior } from '@/lib/classname-by-group-behavior.ts'
 import { useT } from '@/hooks/use-t.ts'
 import { useEvaluateGroupCondition } from '@/hooks/use-evaluate-group-condition.ts'
+import HelpText from '@/components/page/help-text.tsx'
 
 export default function Toggle({ control, isAfterHeader }: { control: McmHelperToggle; isAfterHeader: boolean }) {
   const id = useId()
@@ -17,17 +17,15 @@ export default function Toggle({ control, isAfterHeader }: { control: McmHelperT
   const evaluateCondition = useEvaluateGroupCondition()
 
   const text = t(control.text)
-  const helpTextHandler = useHelpTextHandler(control.help)
   const isControlEvaluated = evaluateCondition(control.groupCondition)
 
   return (
     <div
       className={cn(
-        'flex h-10 items-center gap-x-2',
+        'group flex h-10 items-center gap-x-2',
         isControlEvaluated !== undefined && !isControlEvaluated && classnameByGroupBehavior(control.groupBehavior),
         isAfterHeader && 'pl-3',
       )}
-      {...helpTextHandler}
     >
       <ControlTextTooltip controlText={control.text} asChild>
         <label
@@ -41,6 +39,8 @@ export default function Toggle({ control, isAfterHeader }: { control: McmHelperT
         </label>
       </ControlTextTooltip>
       <Checkbox id={id} />
+
+      <HelpText control={control} />
     </div>
   )
 }

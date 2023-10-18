@@ -1,22 +1,21 @@
 import { McmHelperEnum } from '@/config.ts'
 import { DiamondIcon } from 'lucide-react'
 import { getHexColorFromText, removeColorTagFromText } from '@/lib/color-from-text.tsx'
-import ControlTextTooltip from '@/components/mcm/control-text-tooltip.tsx'
-import { useHelpTextHandler } from '@/hooks/use-help-text-handler.ts'
+import ControlTextTooltip from '@/components/page/control-text-tooltip.tsx'
 import { Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog.tsx'
 import { Button } from '@/components/ui/button.tsx'
 import { useState } from 'react'
 import { cn } from '@/lib/utils.ts'
-import DisplayControlGroupConfig from '@/components/mcm/display-control-group-config.tsx'
+import DisplayControlGroupConfig from '@/components/page/display-control-group-config.tsx'
 import { classnameByGroupBehavior } from '@/lib/classname-by-group-behavior.ts'
 import { useT } from '@/hooks/use-t.ts'
 import { useEvaluateGroupCondition } from '@/hooks/use-evaluate-group-condition.ts'
+import HelpText from '@/components/page/help-text.tsx'
 
 export default function Enum({ control, isAfterHeader }: { control: McmHelperEnum; isAfterHeader: boolean }) {
   const t = useT()
   const evaluateCondition = useEvaluateGroupCondition()
   const text = t(control.text)
-  const helpTextHandler = useHelpTextHandler(control.help)
   const { defaultValue, options, shortNames } = control.valueOptions
   const defaultKeyToUse = (shortNames ?? options).at(0) ?? (shortNames ?? options).at(defaultValue === true ? 0 : defaultValue || 0) ?? 'value'
   const [currentValue, setCurrentValue] = useState<string>(defaultKeyToUse)
@@ -34,11 +33,10 @@ export default function Enum({ control, isAfterHeader }: { control: McmHelperEnu
       <DialogTrigger asChild>
         <button
           className={cn(
-            'flex h-10 cursor-pointer items-center text-left',
+            'group flex h-10 cursor-pointer items-center text-left',
             isControlEvaluated !== undefined && !isControlEvaluated && classnameByGroupBehavior(control.groupBehavior),
             isAfterHeader && 'pl-3',
           )}
-          {...helpTextHandler}
         >
           <ControlTextTooltip controlText={control.text} asChild>
             <span className="flex grow items-center gap-2 overflow-hidden whitespace-nowrap" style={{ color: getHexColorFromText(text) }}>
@@ -50,6 +48,7 @@ export default function Enum({ control, isAfterHeader }: { control: McmHelperEnu
             <DiamondIcon className="mt-1 h-3 w-3 fill-foreground" />
             {removeColorTagFromText(textToUse)}
           </span>
+          <HelpText control={control} />
         </button>
       </DialogTrigger>
       <DialogContent>

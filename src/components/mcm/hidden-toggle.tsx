@@ -1,7 +1,7 @@
 import { McmHelperHiddenToggle } from '@/config.ts'
 import { cn } from '@/lib/utils.ts'
-import DisplayControlGroupControlConfig from '@/components/mcm/display-control-group-control-config.tsx'
-import DisplayControlSourceConfig from '@/components/mcm/display-control-source-config.tsx'
+import DisplayControlGroupControlConfig from '@/components/page/display-control-group-control-config.tsx'
+import DisplayControlSourceConfig from '@/components/page/display-control-source-config.tsx'
 import { classnameByGroupBehavior } from '@/lib/classname-by-group-behavior.ts'
 import { useEvaluateGroupCondition } from '@/hooks/use-evaluate-group-condition.ts'
 

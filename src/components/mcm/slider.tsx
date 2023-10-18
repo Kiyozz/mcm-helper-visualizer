@@ -2,16 +2,16 @@ import { McmHelperSlider } from '@/config.ts'
 import { ChevronsUpDownIcon } from 'lucide-react'
 import { Button } from '@/components/ui/button.tsx'
 import { getHexColorFromText, removeColorTagFromText } from '@/lib/color-from-text.tsx'
-import ControlTextTooltip from '@/components/mcm/control-text-tooltip.tsx'
+import ControlTextTooltip from '@/components/page/control-text-tooltip.tsx'
 import { Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog.tsx'
 import { Slider as SliderUi } from '@/components/ui/slider.tsx'
 import { useState } from 'react'
-import { useHelpTextHandler } from '@/hooks/use-help-text-handler.ts'
 import { cn } from '@/lib/utils.ts'
-import DisplayControlGroupConfig from '@/components/mcm/display-control-group-config.tsx'
+import DisplayControlGroupConfig from '@/components/page/display-control-group-config.tsx'
 import { classnameByGroupBehavior } from '@/lib/classname-by-group-behavior.ts'
 import { useT } from '@/hooks/use-t.ts'
 import { useEvaluateGroupCondition } from '@/hooks/use-evaluate-group-condition.ts'
+import HelpText from '@/components/page/help-text.tsx'
 
 export default function Slider({ control, isAfterHeader }: { control: McmHelperSlider; isAfterHeader: boolean }) {
   const t = useT()
@@ -21,18 +21,16 @@ export default function Slider({ control, isAfterHeader }: { control: McmHelperS
   const digit = Number.isNaN(digitString) ? undefined : digitString
   const defaultValueToUse = typeof control.valueOptions.defaultValue === 'boolean' ? 0 : control.valueOptions.defaultValue ?? control.valueOptions.min
   const [currentValue, setCurrentValue] = useState(defaultValueToUse)
-  const helpTextHandler = useHelpTextHandler(control.help)
   const isControlEvaluated = evaluateCondition(control.groupCondition)
 
   return (
     <Dialog>
       <DialogTrigger
         className={cn(
-          'flex h-10 items-center text-left',
+          'group flex h-10 items-center text-left',
           isAfterHeader && 'pl-3',
           isControlEvaluated !== undefined && !isControlEvaluated && classnameByGroupBehavior(control.groupBehavior),
         )}
-        {...helpTextHandler}
       >
         <ControlTextTooltip controlText={control.text} asChild>
           <span className="flex grow items-center gap-2 overflow-hidden whitespace-nowrap" style={{ color: getHexColorFromText(text) }}>
@@ -46,6 +44,7 @@ export default function Slider({ control, isAfterHeader }: { control: McmHelperS
             <span>{currentValue.toFixed(digit ?? 0)}</span>
           </span>
         </Button>
+        <HelpText control={control} />
       </DialogTrigger>
       <DialogContent className="sm:max-w-lg">
         <DialogHeader>

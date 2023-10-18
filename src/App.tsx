@@ -1,4 +1,4 @@
-import McmContent from '@/components/mcm/mcm-content.tsx'
+import McmContent from '@/components/page/mcm-content.tsx'
 import { Toaster } from '@/components/ui/toaster.tsx'
 import Header from '@/header.tsx'
 
