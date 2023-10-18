@@ -6,12 +6,14 @@ import { readTranslationsFromPath } from '@/lib/read-translations-from-path.ts'
 import { useMcmConfig } from '@/hooks/mcm/use-mcm-config.ts'
 import { useTranslations } from '@/hooks/use-translations.ts'
 import { useCallback } from 'react'
+import { useToast } from '@/components/ui/use-toast.ts'
 
 export function useLoadConfig() {
   const { setMcmConfig, setLastMcmConfigPath } = useMcmConfig((s) => ({
     setMcmConfig: s.setMcmConfig,
     setLastMcmConfigPath: s.setLastMcmConfigPath,
   }))
+  const toast = useToast()
 
   const setTranslations = useTranslations((s) => s.setTranslations)
 
@@ -29,11 +31,20 @@ export function useLoadConfig() {
 
           if (!(await pathExists(translationsFile))) {
             console.log('Translations file does not exist for this config.json')
+            toast.toast({
+              title: 'Translations',
+              description: <span>The translations file does not exists. Check the logs.</span>,
+            })
 
             return
           }
 
           const translations = await readTranslationsFromPath(translationsFile)
+
+          toast.toast({
+            title: 'Translations',
+            description: <span>The translations file has been loaded.</span>,
+          })
 
           setTranslations(translations)
         } catch (error) {
@@ -43,8 +54,11 @@ export function useLoadConfig() {
         setLastMcmConfigPath(configPath)
         setMcmConfig(parseResult.data)
       } else {
-        // TODO: handle error
         console.log(parseResult.error)
+        toast.toast({
+          title: 'Error',
+          description: <span className="text-destructive-foreground">Invalid config.json. Check the logs.</span>,
+        })
       }
     },
     [setMcmConfig, setLastMcmConfigPath, setTranslations],

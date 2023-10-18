@@ -8,6 +8,8 @@ export default function HelpText({ control }: { control: McmHelperControl }) {
   const helpText = 'help' in control ? control.help : undefined
   const text = helpText !== undefined ? t(helpText) : undefined
 
+  if (text === undefined) return null
+
   return (
     <div
       className={cn(
@@ -15,7 +17,7 @@ export default function HelpText({ control }: { control: McmHelperControl }) {
       )}
     >
       <span className="hidden group-hover:inline">
-        {text && <p style={{ color: text ? getHexColorFromText(text) : undefined }}>{removeColorTagFromText(text)}</p>}
+        <p style={{ color: text ? getHexColorFromText(text) : undefined }}>{removeColorTagFromText(text)}</p>
       </span>
     </div>
   )

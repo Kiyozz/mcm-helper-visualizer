@@ -5,6 +5,7 @@ import { ChevronRightIcon } from 'lucide-react'
 import { useMcmConfig } from '@/hooks/mcm/use-mcm-config.ts'
 import { useT } from '@/hooks/use-t.ts'
 import { usePage } from '@/hooks/mcm/use-page.ts'
+import { isSamePage } from '@/lib/is-same-page.ts'
 
 export default function PageMenu() {
   const mcmConfig = useMcmConfig((s) => s.mcmConfig)
@@ -27,7 +28,7 @@ export default function PageMenu() {
         {t(mcmConfig.displayName)}
       </Button>
       {mcmConfig.pages?.map((page) => {
-        const active = page.pageDisplayName === (isPage(currentPage) && currentPage.pageDisplayName)
+        const active = isSamePage(page, currentPage)
 
         return (
           <Button
