@@ -78,7 +78,7 @@
   }
 
   body {
-    @apply min-h-screen bg-background text-foreground;
+    @apply min-h-screen bg-background text-foreground antialiased;
     overflow-y: scroll;
     overflow-x: hidden;
   }

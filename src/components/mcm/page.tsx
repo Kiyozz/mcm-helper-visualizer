@@ -1,13 +1,10 @@
-import { Button } from '@/components/ui/button.tsx'
 import { cn } from '@/lib/utils.ts'
 import Header from '@/components/mcm/header.tsx'
 import Toggle from '@/components/mcm/toggle.tsx'
 import Text from '@/components/mcm/text.tsx'
 import Slider from '@/components/mcm/slider.tsx'
 import Enum from '@/components/mcm/enum.tsx'
-import { useMcm } from '@/hooks/mcm/use-mcm.tsx'
-import { ChevronRightIcon } from 'lucide-react'
-import { hasContentOrCustomContent, isPage, orderPageContent } from '@/lib/order-page-content.ts'
+import { isPage } from '@/lib/order-page-content.ts'
 import Keymap from '@/components/mcm/keymap.tsx'
 import Empty from '@/components/mcm/empty.tsx'
 import HiddenToggle from '@/components/mcm/hidden-toggle.tsx'
@@ -15,54 +12,29 @@ import Input from '@/components/mcm/input.tsx'
 import Color from '@/components/mcm/color.tsx'
 import Stepper from '@/components/mcm/stepper.tsx'
 import Menu from '@/components/mcm/menu.tsx'
+import { useOrderedPage } from '@/hooks/use-ordered-page.ts'
+import { useT } from '@/hooks/use-t.ts'
+import { usePage } from '@/hooks/mcm/use-page.ts'
+import { useMcmConfig } from '@/hooks/mcm/use-mcm-config.ts'
+import PageMenu from '@/components/page/page-menu.tsx'
 
 export default function Page() {
-  const {
-    mcmConfig,
-    currentPage: [currentPage, setCurrentPage],
-    t,
-  } = useMcm()
+  const t = useT()
+  const mcmConfig = useMcmConfig((s) => s.mcmConfig)
+  const page = usePage((s) => s.page)
+  const pageContentToUse = useOrderedPage()
 
-  const pageContentToUse = orderPageContent(currentPage)
+  if (mcmConfig === undefined) return null
 
   return (
     <div className="flex flex-col">
-      <header className="font-futura fixed left-1/2 top-[4.5rem] -translate-x-1/2 bg-background pl-52 text-center text-3xl uppercase">
-        {t((isPage(currentPage) ? currentPage?.pageDisplayName : undefined) ?? mcmConfig.displayName)}
+      <header className="fixed left-1/2 top-[4.5rem] -translate-x-1/2 bg-background pl-52 text-center font-futura text-3xl uppercase">
+        {t((isPage(page) ? page?.pageDisplayName : undefined) ?? mcmConfig.displayName)}
       </header>
       <div className="flex h-full grow pb-24 pt-[4.25rem]">
-        <aside className="font-futura fixed left-0 flex w-80 flex-col overflow-hidden">
-          <Button
-            variant="ghost"
-            className={cn(
-              'mb-2 flex h-14 items-center justify-end whitespace-nowrap rounded-r-lg bg-accent px-4 text-2xl',
-              !hasContentOrCustomContent(mcmConfig) && 'cursor-default',
-              mcmConfig.displayName.length > 15 && 'text-xl',
-            )}
-          >
-            {!isPage(currentPage) && <ChevronRightIcon className="h-5 w-5" />}
-            {t(mcmConfig.displayName)}
-          </Button>
-          {mcmConfig.pages?.map((page) => {
-            const active = page.pageDisplayName === (isPage(currentPage) && currentPage.pageDisplayName)
-
-            return (
-              <Button
-                key={page.pageDisplayName}
-                className={cn('flex h-9 justify-end whitespace-nowrap rounded-none py-1 text-xl')}
-                variant="ghost"
-                onClick={() => {
-                  setCurrentPage(page)
-                }}
-              >
-                {active && <ChevronRightIcon className="h-5 w-5" />}
-                {t(page.pageDisplayName)}
-              </Button>
-            )
-          })}
-        </aside>
-        <main className="font-futura mt-14 flex grow flex-col pl-[21rem] pr-4 text-xl text-slate-300">
-          {isPage(currentPage) && Array.isArray(pageContentToUse) && (
+        <PageMenu />
+        <main className="mt-14 flex grow flex-col pl-[21rem] pr-4 font-futura text-xl text-slate-300">
+          {isPage(page) && Array.isArray(pageContentToUse) && (
             <div className={cn('grid divide-x-2', pageContentToUse.length === 2 ? 'grid-cols-2' : 'grid-cols-1')}>
               {pageContentToUse.map((contentColumn, i) => {
                 if (contentColumn === undefined) return null

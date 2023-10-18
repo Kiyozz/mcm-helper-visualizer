@@ -1,10 +1,9 @@
 import { useCallback } from 'react'
-import { useMcm } from '@/hooks/mcm/use-mcm.tsx'
 
 export function useHelpTextHandler(helpText: string | undefined) {
-  const {
-    helpText: [, setHelpText],
-  } = useMcm()
+  const setHelpText = (helpText?: string) => {
+    void 0
+  }
 
   const onMouseEnter = useCallback(() => {
     setHelpText(helpText)

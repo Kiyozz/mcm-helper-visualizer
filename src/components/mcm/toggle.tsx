@@ -3,16 +3,18 @@ import { useId } from 'react'
 import { Checkbox } from '@/components/ui/checkbox.tsx'
 import { getHexColorFromText, removeColorTagFromText } from '@/lib/color-from-text.tsx'
 import ControlTextTooltip from '@/components/mcm/control-text-tooltip.tsx'
-import { useMcm } from '@/hooks/mcm/use-mcm.tsx'
-import { useHelpTextHandler } from '@/hooks/mcm/use-help-text-handler.tsx'
+import { useHelpTextHandler } from '@/hooks/use-help-text-handler.ts'
 import { cn } from '@/lib/utils.ts'
 import DisplayControlGroupConfig from '@/components/mcm/display-control-group-config.tsx'
 import DisplayControlGroupControlConfig from '@/components/mcm/display-control-group-control-config.tsx'
 import { classnameByGroupBehavior } from '@/lib/classname-by-group-behavior.ts'
+import { useT } from '@/hooks/use-t.ts'
+import { useEvaluateGroupCondition } from '@/hooks/use-evaluate-group-condition.ts'
 
 export default function Toggle({ control, isAfterHeader }: { control: McmHelperToggle; isAfterHeader: boolean }) {
   const id = useId()
-  const { t, evaluateCondition } = useMcm()
+  const t = useT()
+  const evaluateCondition = useEvaluateGroupCondition()
 
   const text = t(control.text)
   const helpTextHandler = useHelpTextHandler(control.help)

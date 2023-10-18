@@ -1,22 +1,10 @@
-import { McmHelperConfig, McmHelperControl, McmHelperCustomContent, McmHelperPage } from '@/config.ts'
-import { McmDisplayableContent } from '@/lib/mcm-displayable-content.ts'
+import { usePage } from '@/hooks/mcm/use-page.ts'
+import { McmHelperControl } from '@/config.ts'
+import { isPage } from '@/lib/order-page-content.ts'
 
-export function hasContentOrCustomContent<T extends McmHelperConfig>(
-  mcmConfig: T,
-): mcmConfig is T & ({ content: McmHelperControl[] } | { customContentData: McmHelperCustomContent }) {
-  return (
-    ('content' in mcmConfig && mcmConfig.content !== undefined && mcmConfig.content.length > 0) ||
-    ('customContentData' in mcmConfig && mcmConfig.customContentData !== undefined)
-  )
-}
+export function useOrderedPage(): [McmHelperControl[], McmHelperControl[] | undefined] | undefined {
+  const page = usePage((s) => s.page)
 
-export function isPage(pageOrContent: McmDisplayableContent): pageOrContent is McmHelperPage {
-  if (pageOrContent === undefined) return false
-
-  return 'pageDisplayName' in pageOrContent
-}
-
-export function orderPageContent(page?: McmDisplayableContent): [McmHelperControl[], McmHelperControl[] | undefined] | undefined {
   if (page === undefined) {
     return undefined
   }

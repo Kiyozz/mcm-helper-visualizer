@@ -1,14 +1,16 @@
 import { McmHelperHeader } from '@/config.ts'
 import ControlTextTooltip from '@/components/mcm/control-text-tooltip.tsx'
 import { getHexColorFromText, removeColorTagFromText } from '@/lib/color-from-text.tsx'
-import { useMcm } from '@/hooks/mcm/use-mcm.tsx'
 import DisplayControlGroupConfig from '@/components/mcm/display-control-group-config.tsx'
-import { useHelpTextHandler } from '@/hooks/mcm/use-help-text-handler.tsx'
+import { useHelpTextHandler } from '@/hooks/use-help-text-handler.ts'
 import { cn } from '@/lib/utils.ts'
 import { classnameByGroupBehavior } from '@/lib/classname-by-group-behavior.ts'
+import { useEvaluateGroupCondition } from '@/hooks/use-evaluate-group-condition.ts'
+import { useT } from '@/hooks/use-t.ts'
 
 export default function Header({ control }: { control: McmHelperHeader }) {
-  const { t, evaluateCondition } = useMcm()
+  const t = useT()
+  const evaluateCondition = useEvaluateGroupCondition()
 
   const text = t(control.text)
   const helpTextHandler = useHelpTextHandler(control.help)

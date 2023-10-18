@@ -8,8 +8,6 @@
 
 - **"groupControl" Simulation**: Test and simulate the behaviors of your "groupControl" without the need to launch the game.
 
-- **Multi-tab Support**: View various tabs and sections of your menu without any limitations.
-
 - **Intuitive Interface**: Designed to be user-friendly, whether you are a novice or seasoned Skyrim mod developer.
 
 - **Translation File Management**: Import your translation files and directly view how they are displayed in the menu. McmHelper Visualizer will attempt to automatically load English translations.
@@ -48,8 +46,6 @@ McmHelper Visualizer is distributed under the **GNU General Public License (GPL)
 - **Prévisualisation** : Obtenez un aperçu de l'apparence de votre menu dans le jeu à partir de votre fichier JSON.
 
 - **Simulation des "groupControl"** : Testez et simulez les comportements de vos "groupControl" sans avoir à lancer le jeu.
-
-- **Support Multi-onglets** : Visualisez différents onglets et sections de votre menu sans aucune restriction.
 
 - **Interface intuitive** : Conçue pour être simple à utiliser, que vous soyez un développeur moddeur débutant ou expérimenté.
 

@@ -3,10 +3,10 @@ import { cn } from '@/lib/utils.ts'
 import DisplayControlGroupControlConfig from '@/components/mcm/display-control-group-control-config.tsx'
 import DisplayControlSourceConfig from '@/components/mcm/display-control-source-config.tsx'
 import { classnameByGroupBehavior } from '@/lib/classname-by-group-behavior.ts'
-import { useMcm } from '@/hooks/mcm/use-mcm.tsx'
+import { useEvaluateGroupCondition } from '@/hooks/use-evaluate-group-condition.ts'
 
 export default function HiddenToggle({ control, isAfterHeader }: { control: McmHelperHiddenToggle; isAfterHeader: boolean }) {
-  const { evaluateCondition } = useMcm()
+  const evaluateCondition = useEvaluateGroupCondition()
   const isControlEvaluated = evaluateCondition(control.groupCondition)
 
   return (

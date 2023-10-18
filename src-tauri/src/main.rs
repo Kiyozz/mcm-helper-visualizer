@@ -6,7 +6,6 @@ use std::fs;
 use std::path::Path;
 use utf16string::{WString};
 
-// Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
 #[tauri::command]
 fn read_file(path: &str) -> Option<String> {
     let contents = fs::read_to_string(path);
@@ -32,16 +31,8 @@ fn read_translations(path: &str) -> Option<HashMap<String, String>> {
             let utf8 = decoded.to_utf8();
             let utf8 = utf8.trim_start_matches('\u{feff}').to_string(); // Remove BOM
 
+            #[cfg(debug_assertions)]
             println!("{}", utf8);
-
-            /*
-                text is like this:
-
-                $Text Value
-                $Text2 Value2
-                // maybe empty line, can be seperator \r\n or \t
-                $Text3 Value3
-            */
 
             let mut map = HashMap::new();
 

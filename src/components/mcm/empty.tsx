@@ -1,10 +1,10 @@
 import { McmHelperEmpty } from '@/config.ts'
-import { useMcm } from '@/hooks/mcm/use-mcm.tsx'
 import { cn } from '@/lib/utils.ts'
 import { classnameByGroupBehavior } from '@/lib/classname-by-group-behavior.ts'
+import { useEvaluateGroupCondition } from '@/hooks/use-evaluate-group-condition.ts'
 
 export default function Empty({ control }: { control: McmHelperEmpty }) {
-  const { evaluateCondition } = useMcm()
+  const evaluateCondition = useEvaluateGroupCondition()
   const isControlEvaluated = evaluateCondition(control.groupCondition)
 
   return (
