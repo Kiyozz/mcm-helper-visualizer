@@ -131,7 +131,7 @@ function App() {
   return (
     <>
       <header className={cn(mcmConfig === undefined ? 'flex h-screen flex-col items-center justify-center' : 'sticky top-0 bg-background')}>
-        {mcmConfig === undefined && <h1 className="text-xl">Welcome to McmHelper Visual. Load your McmHelper config.json here</h1>}
+        {mcmConfig === undefined && <h1 className="text-xl">Welcome to McmHelper Visualizer. Load your McmHelper config.json here</h1>}
         <div className="flex gap-4 p-4">
           <Button onClick={onClickLoadConfigJson} size={mcmConfig === undefined ? 'lg' : undefined}>
             Load config.json
