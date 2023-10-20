@@ -19,7 +19,6 @@ export function useLoadConfig() {
 
   return useCallback(
     async (configPath: string) => {
-      setMcmConfig(undefined)
       const fileAsJson = await readFile(configPath)
 
       const parseResult = McmHelperConfigSchema.safeParse(fileAsJson)

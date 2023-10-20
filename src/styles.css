@@ -82,7 +82,37 @@
     overflow-y: scroll;
     overflow-x: hidden;
   }
+
   #root {
     @apply min-h-screen;
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-button:vertical {
+    @apply bg-background;
+  }
+
+  ::-webkit-scrollbar-button:vertical:decrement {
+    height: 5px;
+  }
+
+  ::-webkit-scrollbar-button:vertical:increment {
+    height: 7px;
+  }
+
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    @apply bg-accent/60 rounded-xl;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-primary-foreground;
   }
 }

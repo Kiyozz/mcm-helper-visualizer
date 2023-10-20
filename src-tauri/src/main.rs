@@ -31,9 +31,6 @@ fn read_translations(path: &str) -> Option<HashMap<String, String>> {
             let utf8 = decoded.to_utf8();
             let utf8 = utf8.trim_start_matches('\u{feff}').to_string(); // Remove BOM
 
-            #[cfg(debug_assertions)]
-            println!("{}", utf8);
-
             let mut map = HashMap::new();
 
             for line in utf8.lines() {

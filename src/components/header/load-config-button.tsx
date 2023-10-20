@@ -7,7 +7,7 @@ import { useMcmConfig } from '@/hooks/mcm/use-mcm-config.ts'
 export default function LoadConfigButton() {
   const loadConfig = useLoadConfig()
   const setGroups = useSimulation((s) => s.setGroups)
-  const mcmConfig = useMcmConfig((s) => s.mcmConfig)
+  const { mcmConfig, setMcmConfig } = useMcmConfig((s) => ({ setMcmConfig: s.setMcmConfig, mcmConfig: s.mcmConfig }))
 
   async function onClickLoadConfigJson() {
     open({
@@ -22,6 +22,8 @@ export default function LoadConfigButton() {
       title: 'Load config.json',
     }).then(async (configPath) => {
       if (Array.isArray(configPath) || configPath === null) return
+
+      setMcmConfig(undefined)
 
       await loadConfig(configPath)
 

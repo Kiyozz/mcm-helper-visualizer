@@ -28,7 +28,7 @@ export default function Page() {
 
   return (
     <div className="flex flex-col">
-      <header className="fixed left-1/2 top-[4.5rem] -translate-x-1/2 bg-background pl-52 text-center font-futura text-3xl uppercase">
+      <header className="fixed left-1/2 top-[4.5rem] w-full -translate-x-1/2 bg-background pl-52 text-center font-futura text-3xl uppercase">
         {t((isPage(page) ? page?.pageDisplayName : undefined) ?? mcmConfig.displayName)}
       </header>
       <div className="flex h-full grow pb-24 pt-[4.25rem]">
