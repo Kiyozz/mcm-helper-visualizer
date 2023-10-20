@@ -7,6 +7,7 @@ import { useMcmConfig } from '@/hooks/mcm/use-mcm-config.ts'
 import { useTranslations } from '@/hooks/use-translations.ts'
 import { useCallback } from 'react'
 import { useToast } from '@/components/ui/use-toast.ts'
+import { logText } from '@/lib/log-text.ts'
 
 export function useLoadConfig() {
   const { setMcmConfig, setLastMcmConfigPath } = useMcmConfig((s) => ({
@@ -19,17 +20,20 @@ export function useLoadConfig() {
 
   return useCallback(
     async (configPath: string) => {
+      await logText(`Loading config.json from "${configPath}"`)
+
       const fileAsJson = await readFile(configPath)
 
       const parseResult = McmHelperConfigSchema.safeParse(fileAsJson)
 
       if (parseResult.success) {
-        try {
-          const modName = await path.basename(await path.dirname(configPath))
-          const translationsFile = await path.resolve(configPath, '../../../../Interface/Translations', `${modName}_english.txt`)
+        const modName = await path.basename(await path.dirname(configPath))
+        const translationsFile = await path.resolve(configPath, '../../../../Interface/Translations', `${modName}_english.txt`)
 
+        try {
           if (!(await pathExists(translationsFile))) {
             console.log('Translations file does not exist for this config.json')
+            await logText(`Translations file "${translationsFile}" does not exist for this config.json`, 'warn')
             toast.toast({
               title: 'Translations',
               description: <span>The translations file does not exists. Check the logs.</span>,
@@ -37,6 +41,8 @@ export function useLoadConfig() {
 
             return
           }
+
+          await logText('Translations file has been detected and will be loaded.')
 
           const translations = await readTranslationsFromPath(translationsFile)
 
@@ -48,12 +54,15 @@ export function useLoadConfig() {
           setTranslations(translations)
         } catch (error) {
           console.error(error)
+
+          await logText(`Translations file has been detected but cannot be loaded: "${translationsFile}"`, 'error')
         }
 
         setLastMcmConfigPath(configPath)
         setMcmConfig(parseResult.data)
       } else {
         console.log(parseResult.error)
+        await logText('Cannot parse config.json. The config file does not meet the McmHelper format.', 'error')
         toast.toast({
           title: 'Error',
           description: <span className="text-destructive-foreground">Invalid config.json. Check the logs.</span>,

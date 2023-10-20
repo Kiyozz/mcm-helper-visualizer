@@ -19,7 +19,7 @@ export default function LoadConfigButton() {
         },
       ],
       multiple: false,
-      title: 'Load config.json',
+      title: 'Mcm config.json',
     }).then(async (configPath) => {
       if (Array.isArray(configPath) || configPath === null) return
 
