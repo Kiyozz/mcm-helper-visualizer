@@ -1,6 +1,6 @@
 [package]
 name = "mcm-helper-visualizer"
-version = "0.1.0"
+version = "0.1.1"
 description = "Mcm Helper Visualizer. A tool to visualize the mcm helper menu without opening the game."
 authors = ["kiyozz alias wk alias wushulate"]
 license = "GPL-3"

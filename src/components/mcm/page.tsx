@@ -34,43 +34,43 @@ export default function Page() {
       <div className="flex h-full grow pb-24 pt-[4.25rem]">
         <PageMenu />
         <main className="mt-14 flex grow flex-col pl-[21rem] pr-4 font-futura text-xl text-slate-300">
-          {isPage(page) && Array.isArray(pageContentToUse) && (
+          {Array.isArray(pageContentToUse) && (
             <div className={cn('grid divide-x-2', pageContentToUse.length === 2 ? 'grid-cols-2' : 'grid-cols-1')}>
               {pageContentToUse.map((contentColumn, i) => {
                 if (contentColumn === undefined) return null
 
                 return (
                   <div key={i} className="flex flex-col pl-8 first:pl-0 first:pr-8">
-                    {contentColumn.map((control, i) => {
-                      const isAfterHeader = contentColumn.some((c, cI) => {
-                        return c.type === 'header' && cI < i
+                    {contentColumn.map((control, index) => {
+                      const isAfterHeader = contentColumn.some((c, cIndex) => {
+                        return c.type === 'header' && cIndex < index
                       })
 
                       switch (control.type) {
                         case 'header':
-                          return <Header key={`${i}-${control.text}`} control={control} />
+                          return <Header key={`${index}-${control.text}`} control={control} />
                         case 'toggle':
-                          return <Toggle key={`${i}-${control.text}`} isAfterHeader={isAfterHeader} control={control} />
+                          return <Toggle key={`${index}-${control.text}`} isAfterHeader={isAfterHeader} control={control} />
                         case 'text':
-                          return <Text key={`${i}-${control.text}`} isAfterHeader={isAfterHeader} control={control} />
+                          return <Text key={`${index}-${control.text}`} isAfterHeader={isAfterHeader} control={control} />
                         case 'slider':
-                          return <Slider key={`${i}-${control.text}`} isAfterHeader={isAfterHeader} control={control} />
+                          return <Slider key={`${index}-${control.text}`} isAfterHeader={isAfterHeader} control={control} />
                         case 'enum':
-                          return <Enum key={`${i}-${control.text}`} isAfterHeader={isAfterHeader} control={control} />
+                          return <Enum key={`${index}-${control.text}`} isAfterHeader={isAfterHeader} control={control} />
                         case 'keymap':
-                          return <Keymap key={`${i}-${control.text}`} isAfterHeader={isAfterHeader} control={control} />
+                          return <Keymap key={`${index}-${control.text}`} isAfterHeader={isAfterHeader} control={control} />
                         case 'empty':
-                          return <Empty key={`${i}-empty`} control={control} />
+                          return <Empty key={`${index}-empty`} control={control} />
                         case 'hiddenToggle':
-                          return <HiddenToggle key={`${i}-${control.text}`} isAfterHeader={isAfterHeader} control={control} />
+                          return <HiddenToggle key={`${index}-${control.text}`} isAfterHeader={isAfterHeader} control={control} />
                         case 'input':
-                          return <Input key={`${i}-${control.text}`} isAfterHeader={isAfterHeader} control={control} />
+                          return <Input key={`${index}-${control.text}`} isAfterHeader={isAfterHeader} control={control} />
                         case 'color':
-                          return <Color key={`${i}-${control.text}`} isAfterHeader={isAfterHeader} control={control} />
+                          return <Color key={`${index}-${control.text}`} isAfterHeader={isAfterHeader} control={control} />
                         case 'stepper':
-                          return <Stepper key={`${i}-${control.text}`} isAfterHeader={isAfterHeader} control={control} />
+                          return <Stepper key={`${index}-${control.text}`} isAfterHeader={isAfterHeader} control={control} />
                         case 'menu':
-                          return <Menu key={`${i}-${control.text}`} isAfterHeader={isAfterHeader} control={control} />
+                          return <Menu key={`${index}-${control.text}`} isAfterHeader={isAfterHeader} control={control} />
                       }
                     })}
                   </div>

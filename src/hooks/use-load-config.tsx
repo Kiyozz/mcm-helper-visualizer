@@ -60,7 +60,7 @@ export function useLoadConfig() {
         setLastMcmConfigPath(configPath)
         setMcmConfig(parseResult.data)
       } else {
-        console.log(parseResult.error)
+        console.log(parseResult.error, parseResult.error.errors)
         await logText('Cannot parse config.json. The config file does not meet the McmHelper format.', 'error')
         toast.toast({
           title: 'Error',

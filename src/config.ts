@@ -37,7 +37,7 @@ const GroupConditionSchema: z.ZodType<GroupCondition> = z.union([
 const BaseControlSchema = z.object({
   groupBehavior: GroupBehaviorSchema,
   groupCondition: GroupConditionSchema.optional(),
-  position: z.number().int().min(0).max(1).default(0),
+  position: z.number().int().min(0).default(0),
 })
 
 const CursorFileModeSchema = z.enum(['topToBottom', 'leftToRight']).default('leftToRight')
@@ -80,7 +80,7 @@ const TextSourceSchema = z
   .optional()
 
 const SourceTypeSchema = z.object({
-  sourceType: z.union([z.literal('GlobalValue'), z.literal('ModSettingBool'), z.literal('ModSettingFloat'), z.literal('ModSettingInt')]),
+  sourceType: z.union([z.literal('GlobalValue'), z.literal('ModSettingBool'), z.literal('ModSettingFloat'), z.literal('ModSettingInt')]).optional(),
 })
 
 const SourceTypeScriptNameSchema = z.object({
