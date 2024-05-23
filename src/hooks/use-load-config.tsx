@@ -31,27 +31,26 @@ export function useLoadConfig() {
         const translationsFile = await path.resolve(configPath, '../../../../Interface/Translations', `${modName}_english.txt`)
 
         try {
-          if (!(await pathExists(translationsFile))) {
+          if (await pathExists(translationsFile)) {
+            await logText('Translations file has been detected and will be loaded.')
+
+            const translations = await readTranslationsFromPath(translationsFile)
+
+            toast.toast({
+              title: 'Translations',
+              description: <span>The translations file has been loaded.</span>,
+            })
+
+            setTranslations(translations)
+          } else {
             console.log('Translations file does not exist for this config.json')
             await logText(`Translations file "${translationsFile}" does not exist for this config.json`, 'warn')
             toast.toast({
               title: 'Translations',
-              description: <span>The translations file does not exists. Check the logs.</span>,
+              description: <span>This config.json does not have any translations. If not expected, check the logs.</span>,
             })
-
-            return
+            setTranslations(undefined)
           }
-
-          await logText('Translations file has been detected and will be loaded.')
-
-          const translations = await readTranslationsFromPath(translationsFile)
-
-          toast.toast({
-            title: 'Translations',
-            description: <span>The translations file has been loaded.</span>,
-          })
-
-          setTranslations(translations)
         } catch (error) {
           console.error(error)
 

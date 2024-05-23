@@ -18,6 +18,7 @@ fn read_file(path: &str) -> Option<String> {
         Ok(contents) => Some(contents),
         Err(err) => {
             println!("{:?}", err);
+            error!("Failed to read file: {:?}", err);
 
             None
         }
