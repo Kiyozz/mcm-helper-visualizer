@@ -16,7 +16,7 @@
 
 ## Installation
 
-1. Visit [NexusMods](#installation) to download the latest version of McmHelper Visualizer.
+1. Visit [NexusMods](https://www.nexusmods.com/skyrimspecialedition/mods/102827) to download the latest version of McmHelper Visualizer.
 
 2. Follow the provided instructions on the download page for installation.
 
@@ -55,7 +55,7 @@ McmHelper Visualizer is distributed under the **GNU General Public License (GPL)
 
 ## Installation
 
-1. Visitez [NexusMods](#installation) pour télécharger la dernière version de McmHelper Visualizer.
+1. Visitez [NexusMods](https://www.nexusmods.com/skyrimspecialedition/mods/102827) pour télécharger la dernière version de McmHelper Visualizer.
 
 2. Suivez les instructions fournies sur la page de téléchargement pour l'installation.
 
