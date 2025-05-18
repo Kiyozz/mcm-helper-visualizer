@@ -1,11 +1,11 @@
 import { Button } from '@/components/ui/button.tsx'
-import { cn } from '@/lib/utils.ts'
-import { hasContentOrCustomContent, isPage } from '@/lib/order-page-content.ts'
-import { ChevronRightIcon } from 'lucide-react'
 import { useMcmConfig } from '@/hooks/mcm/use-mcm-config.ts'
-import { useT } from '@/hooks/use-t.ts'
 import { usePage } from '@/hooks/mcm/use-page.ts'
+import { useT } from '@/hooks/use-t.ts'
 import { isSamePage } from '@/lib/is-same-page.ts'
+import { hasContentOrCustomContent, isPage } from '@/lib/order-page-content.ts'
+import { cn } from '@/lib/utils.ts'
+import { ChevronRightIcon } from 'lucide-react'
 
 export default function PageMenu() {
   const mcmConfig = useMcmConfig((s) => s.mcmConfig)

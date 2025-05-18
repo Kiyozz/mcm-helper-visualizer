@@ -11,7 +11,9 @@ export function isSamePage(page: McmDisplayableContent, otherPage: McmDisplayabl
   if ('customContent' in page && 'customContent' in otherPage) {
     const { x, y, source } = page.customContent
 
-    return source === otherPage.customContent.source && x === otherPage.customContent.x && y === otherPage.customContent.y
+    return (
+      source === otherPage.customContent.source && x === otherPage.customContent.x && y === otherPage.customContent.y
+    )
   }
 
   return false

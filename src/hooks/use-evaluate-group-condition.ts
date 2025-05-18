@@ -1,7 +1,7 @@
-import { useCallback } from 'react'
 import { GroupCondition } from '@/config.ts'
-import { evaluateGroupCondition } from '@/lib/evaluate-group-condition.ts'
 import { useSimulation } from '@/hooks/mcm/use-simulation.ts'
+import { evaluateGroupCondition } from '@/lib/evaluate-group-condition.ts'
+import { useCallback } from 'react'
 
 export function useEvaluateGroupCondition() {
   const groups = useSimulation((s) => s.groups)

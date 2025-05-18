@@ -40,7 +40,7 @@ export default function Page() {
                 if (contentColumn === undefined) return null
 
                 return (
-                  <div key={i} className="flex flex-col pl-8 first:pl-0 first:pr-8">
+                  <div key={i} className="flex flex-col pl-8 first:pr-8 first:pl-0">
                     {contentColumn.map((control, index) => {
                       const isAfterHeader = contentColumn.some((c, cIndex) => {
                         return c.type === 'header' && cIndex < index

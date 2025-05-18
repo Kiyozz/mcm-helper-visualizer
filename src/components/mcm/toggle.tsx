@@ -1,15 +1,15 @@
-import { McmHelperToggle } from '@/config.ts'
-import { useId } from 'react'
-import { Checkbox } from '@/components/ui/checkbox.tsx'
-import { getHexColorFromText, removeColorTagFromText } from '@/lib/color-from-text.tsx'
 import ControlTextTooltip from '@/components/page/control-text-tooltip.tsx'
-import { cn } from '@/lib/utils.ts'
 import DisplayControlGroupConfig from '@/components/page/display-control-group-config.tsx'
 import DisplayControlGroupControlConfig from '@/components/page/display-control-group-control-config.tsx'
-import { classnameByGroupBehavior } from '@/lib/classname-by-group-behavior.ts'
-import { useT } from '@/hooks/use-t.ts'
-import { useEvaluateGroupCondition } from '@/hooks/use-evaluate-group-condition.ts'
 import HelpText from '@/components/page/help-text.tsx'
+import { Checkbox } from '@/components/ui/checkbox.tsx'
+import { McmHelperToggle } from '@/config.ts'
+import { useEvaluateGroupCondition } from '@/hooks/use-evaluate-group-condition.ts'
+import { useT } from '@/hooks/use-t.ts'
+import { classnameByGroupBehavior } from '@/lib/classname-by-group-behavior.ts'
+import { getHexColorFromText, removeColorTagFromText } from '@/lib/color-from-text.tsx'
+import { cn } from '@/lib/utils.ts'
+import { useId } from 'react'
 
 export default function Toggle({ control, isAfterHeader }: { control: McmHelperToggle; isAfterHeader: boolean }) {
   const id = useId()

@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button.tsx'
 import { useMcmConfig } from '@/hooks/mcm/use-mcm-config.ts'
-import { useLoadConfig } from '@/hooks/use-load-config.tsx'
 import { useSimulation } from '@/hooks/mcm/use-simulation.ts'
+import { useLoadConfig } from '@/hooks/use-load-config.tsx'
 import { logText } from '@/lib/log-text.ts'
 
 export default function ReloadChangesButton() {

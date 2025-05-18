@@ -16,7 +16,9 @@ export function isPage(pageOrContent: McmDisplayableContent): pageOrContent is M
   return 'pageDisplayName' in pageOrContent
 }
 
-export function orderPageContent(page?: McmDisplayableContent): [McmHelperControl[], McmHelperControl[] | undefined] | undefined {
+export function orderPageContent(
+  page?: McmDisplayableContent,
+): [McmHelperControl[], McmHelperControl[] | undefined] | undefined {
   if (page === undefined) {
     return undefined
   }

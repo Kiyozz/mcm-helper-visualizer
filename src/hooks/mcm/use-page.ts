@@ -1,7 +1,7 @@
-import { create } from 'zustand'
-import { McmDisplayableContent } from '@/lib/mcm-displayable-content.ts'
 import { useSimulation } from '@/hooks/mcm/use-simulation.ts'
 import { isSamePage } from '@/lib/is-same-page.ts'
+import { McmDisplayableContent } from '@/lib/mcm-displayable-content.ts'
+import { create } from 'zustand'
 
 type PageStore = {
   page: McmDisplayableContent | undefined

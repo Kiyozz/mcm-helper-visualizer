@@ -1,8 +1,8 @@
-import { open } from '@tauri-apps/plugin-dialog'
-import { readTranslationsFromPath } from '@/lib/read-translations-from-path.ts'
 import { Button } from '@/components/ui/button.tsx'
-import { useTranslations } from '@/hooks/use-translations.ts'
 import { useToast } from '@/components/ui/use-toast.ts'
+import { useTranslations } from '@/hooks/use-translations.ts'
+import { readTranslationsFromPath } from '@/lib/read-translations-from-path.ts'
+import { open } from '@tauri-apps/plugin-dialog'
 
 export default function LoadTranslationsButton() {
   const toast = useToast()

@@ -1,6 +1,9 @@
 import { GroupCondition } from '@/config.ts'
 
-export function evaluateGroupCondition(groupCondition: GroupCondition, simulatedGroupControl: number[] | undefined): boolean {
+export function evaluateGroupCondition(
+  groupCondition: GroupCondition,
+  simulatedGroupControl: number[] | undefined,
+): boolean {
   if (typeof groupCondition === 'number') {
     return simulatedGroupControl?.includes(groupCondition) ?? false
   }

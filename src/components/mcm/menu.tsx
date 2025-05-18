@@ -1,16 +1,24 @@
-import { McmHelperMenu } from '@/config.ts'
-import { DiamondIcon } from 'lucide-react'
-import { getHexColorFromText, removeColorTagFromText } from '@/lib/color-from-text.tsx'
 import ControlTextTooltip from '@/components/page/control-text-tooltip.tsx'
-import { Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog.tsx'
-import { Button } from '@/components/ui/button.tsx'
-import { useState } from 'react'
-import { cn } from '@/lib/utils.ts'
 import DisplayControlGroupConfig from '@/components/page/display-control-group-config.tsx'
-import { classnameByGroupBehavior } from '@/lib/classname-by-group-behavior.ts'
-import { useT } from '@/hooks/use-t.ts'
-import { useEvaluateGroupCondition } from '@/hooks/use-evaluate-group-condition.ts'
 import HelpText from '@/components/page/help-text.tsx'
+import { Button } from '@/components/ui/button.tsx'
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog.tsx'
+import { McmHelperMenu } from '@/config.ts'
+import { useEvaluateGroupCondition } from '@/hooks/use-evaluate-group-condition.ts'
+import { useT } from '@/hooks/use-t.ts'
+import { classnameByGroupBehavior } from '@/lib/classname-by-group-behavior.ts'
+import { getHexColorFromText, removeColorTagFromText } from '@/lib/color-from-text.tsx'
+import { cn } from '@/lib/utils.ts'
+import { DiamondIcon } from 'lucide-react'
+import { useState } from 'react'
 
 export default function Menu({ control, isAfterHeader }: { control: McmHelperMenu; isAfterHeader: boolean }) {
   const t = useT()
@@ -39,7 +47,10 @@ export default function Menu({ control, isAfterHeader }: { control: McmHelperMen
           )}
         >
           <ControlTextTooltip controlText={control.text} asChild>
-            <span className="flex grow items-center gap-2 overflow-hidden whitespace-nowrap" style={{ color: getHexColorFromText(text) }}>
+            <span
+              className="flex grow items-center gap-2 overflow-hidden whitespace-nowrap"
+              style={{ color: getHexColorFromText(text) }}
+            >
               <span>{removeColorTagFromText(text)}</span>
               <DisplayControlGroupConfig control={control} />
             </span>
@@ -71,7 +82,12 @@ export default function Menu({ control, isAfterHeader }: { control: McmHelperMen
                 }}
               >
                 <div className="relative">
-                  <DiamondIcon className={cn('absolute -left-4 top-[calc(50%+1px)] h-3 w-3 -translate-y-1/2 fill-foreground', !active && 'hidden')} />
+                  <DiamondIcon
+                    className={cn(
+                      '-left-4 -translate-y-1/2 absolute top-[calc(50%+1px)] h-3 w-3 fill-foreground',
+                      !active && 'hidden',
+                    )}
+                  />
                   <span>{removeColorTagFromText(optionText)}</span>
                 </div>
               </Button>

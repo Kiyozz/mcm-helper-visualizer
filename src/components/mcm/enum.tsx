@@ -87,7 +87,7 @@ export default function Enum({ control, isAfterHeader }: { control: McmHelperEnu
                 <div className="relative">
                   <DiamondIcon
                     className={cn(
-                      'absolute -left-4 top-[calc(50%+1px)] h-3 w-3 -translate-y-1/2 fill-foreground',
+                      '-left-4 -translate-y-1/2 absolute top-[calc(50%+1px)] h-3 w-3 fill-foreground',
                       !active && 'hidden',
                     )}
                   />

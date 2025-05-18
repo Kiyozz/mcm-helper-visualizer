@@ -1,15 +1,15 @@
-import { McmHelperInput } from '@/config.ts'
-import { getHexColorFromText, removeColorTagFromText } from '@/lib/color-from-text.tsx'
 import ControlTextTooltip from '@/components/page/control-text-tooltip.tsx'
-import { Slot } from '@radix-ui/react-slot'
-import { cn } from '@/lib/utils.ts'
 import DisplayControlGroupConfig from '@/components/page/display-control-group-config.tsx'
-import { TextCursorInputIcon } from 'lucide-react'
 import DisplayControlSourceConfig from '@/components/page/display-control-source-config.tsx'
-import { classnameByGroupBehavior } from '@/lib/classname-by-group-behavior.ts'
-import { useT } from '@/hooks/use-t.ts'
-import { useEvaluateGroupCondition } from '@/hooks/use-evaluate-group-condition.ts'
 import HelpText from '@/components/page/help-text.tsx'
+import { McmHelperInput } from '@/config.ts'
+import { useEvaluateGroupCondition } from '@/hooks/use-evaluate-group-condition.ts'
+import { useT } from '@/hooks/use-t.ts'
+import { classnameByGroupBehavior } from '@/lib/classname-by-group-behavior.ts'
+import { getHexColorFromText, removeColorTagFromText } from '@/lib/color-from-text.tsx'
+import { cn } from '@/lib/utils.ts'
+import { Slot } from '@radix-ui/react-slot'
+import { TextCursorInputIcon } from 'lucide-react'
 
 export default function Input({ control, isAfterHeader }: { control: McmHelperInput; isAfterHeader: boolean }) {
   const t = useT()
@@ -26,7 +26,10 @@ export default function Input({ control, isAfterHeader }: { control: McmHelperIn
       )}
     >
       <Slot style={{ color: getHexColorFromText(text) }}>
-        <ControlTextTooltip controlText={control.text} className="flex items-center gap-2 overflow-hidden whitespace-nowrap">
+        <ControlTextTooltip
+          controlText={control.text}
+          className="flex items-center gap-2 overflow-hidden whitespace-nowrap"
+        >
           <span>{removeColorTagFromText(text)}</span>
           <DisplayControlGroupConfig control={control} />
         </ControlTextTooltip>

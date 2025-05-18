@@ -1,7 +1,7 @@
-import { usePage } from '@/hooks/mcm/use-page.ts'
 import { McmHelperControl } from '@/config.ts'
-import { isPage } from '@/lib/order-page-content.ts'
 import { useMcmConfig } from '@/hooks/mcm/use-mcm-config.ts'
+import { usePage } from '@/hooks/mcm/use-page.ts'
+import { isPage } from '@/lib/order-page-content.ts'
 
 export function useOrderedPage(): [McmHelperControl[], McmHelperControl[] | undefined] | undefined {
   const page = usePage((s) => s.page)
@@ -26,7 +26,7 @@ export function useOrderedPage(): [McmHelperControl[], McmHelperControl[] | unde
 
   return content.reduce(
     (acc, control, i) => {
-      const cursorFillMode = 'cursorFillMode' in page ? page.cursorFillMode : mcm?.cursorFillMode ?? 'leftToRight'
+      const cursorFillMode = 'cursorFillMode' in page ? page.cursorFillMode : (mcm?.cursorFillMode ?? 'leftToRight')
 
       if (cursorFillMode === 'leftToRight') {
         const isEven = i % 2 === 0
