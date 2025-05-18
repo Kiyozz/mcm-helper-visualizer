@@ -1,5 +1,5 @@
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger, TooltipTriggerProps } from '@/components/ui/tooltip.tsx'
-import { ElementRef, forwardRef, useEffect, useState } from 'react'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger, type TooltipTriggerProps } from '@/components/ui/tooltip.tsx'
+import { type ElementRef, forwardRef, useEffect, useState } from 'react'
 import { clipboard } from '@tauri-apps/api'
 import { CopyIcon } from 'lucide-react'
 

@@ -8,6 +8,7 @@ import { useTranslations } from '@/hooks/use-translations.ts'
 import { useCallback } from 'react'
 import { useToast } from '@/components/ui/use-toast.ts'
 import { logText } from '@/lib/log-text.ts'
+import { Button } from '@/components/ui/button.tsx'
 
 export function useLoadConfig() {
   const { setMcmConfig, setLastMcmConfigPath } = useMcmConfig((s) => ({
@@ -17,6 +18,10 @@ export function useLoadConfig() {
   const toast = useToast()
 
   const setTranslations = useTranslations((s) => s.setTranslations)
+
+  const onOpenLogs = async () => {
+    // Open the logs
+  }
 
   return useCallback(
     async (configPath: string) => {
@@ -65,9 +70,10 @@ export function useLoadConfig() {
         toast.toast({
           title: 'Error',
           description: <span className="text-destructive-foreground">Invalid config.json. Check the logs.</span>,
+          action: <Button onClick={onOpenLogs}>Open logs</Button>,
         })
       }
     },
-    [setMcmConfig, setLastMcmConfigPath, setTranslations],
+    [setMcmConfig, setLastMcmConfigPath, setTranslations, toast.toast],
   )
 }
