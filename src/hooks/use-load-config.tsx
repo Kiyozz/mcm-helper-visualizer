@@ -1,27 +1,27 @@
-import { readFile } from '@/lib/read-file.ts'
+import { Button } from '@/components/ui/button.tsx'
+import { useToast } from '@/components/ui/use-toast.ts'
 import { McmHelperConfigSchema } from '@/config.ts'
-import * as path from '@tauri-apps/api/path'
-import { pathExists } from '@/lib/path-exists.ts'
-import { readTranslationsFromPath } from '@/lib/read-translations-from-path.ts'
 import { useMcmConfig } from '@/hooks/mcm/use-mcm-config.ts'
 import { useTranslations } from '@/hooks/use-translations.ts'
-import { useCallback } from 'react'
-import { useToast } from '@/components/ui/use-toast.ts'
+import { openLogDir } from '@/ipc/open_log_dir.ts'
 import { logText } from '@/lib/log-text.ts'
-import { Button } from '@/components/ui/button.tsx'
+import { pathExists } from '@/lib/path-exists.ts'
+import { readFile } from '@/lib/read-file.ts'
+import { readTranslationsFromPath } from '@/lib/read-translations-from-path.ts'
+import * as path from '@tauri-apps/api/path'
+import { useCallback } from 'react'
 
 export function useLoadConfig() {
-  const { setMcmConfig, setLastMcmConfigPath } = useMcmConfig((s) => ({
-    setMcmConfig: s.setMcmConfig,
-    setLastMcmConfigPath: s.setLastMcmConfigPath,
-  }))
+  const setMcmConfig = useMcmConfig((s) => s.setMcmConfig)
+  const setLastMcmConfigPath = useMcmConfig((s) => s.setLastMcmConfigPath)
   const toast = useToast()
 
   const setTranslations = useTranslations((s) => s.setTranslations)
 
-  const onOpenLogs = async () => {
+  const onOpenLogs = useCallback(async () => {
     // Open the logs
-  }
+    await openLogDir()
+  }, [])
 
   return useCallback(
     async (configPath: string) => {
@@ -33,7 +33,11 @@ export function useLoadConfig() {
 
       if (parseResult.success) {
         const modName = await path.basename(await path.dirname(configPath))
-        const translationsFile = await path.resolve(configPath, '../../../../Interface/Translations', `${modName}_english.txt`)
+        const translationsFile = await path.resolve(
+          configPath,
+          '../../../../Interface/Translations',
+          `${modName}_english.txt`,
+        )
 
         try {
           if (await pathExists(translationsFile)) {
@@ -52,7 +56,10 @@ export function useLoadConfig() {
             await logText(`Translations file "${translationsFile}" does not exist for this config.json`, 'warn')
             toast.toast({
               title: 'Translations',
-              description: <span>This config.json does not have any translations. If not expected, check the logs.</span>,
+              description: (
+                <span>This config.json does not have any translations. If not expected, check the logs.</span>
+              ),
+              action: <Button onClick={onOpenLogs}>Open logs</Button>,
             })
             setTranslations(undefined)
           }
@@ -60,6 +67,15 @@ export function useLoadConfig() {
           console.error(error)
 
           await logText(`Translations file has been detected but cannot be loaded: "${translationsFile}"`, 'error')
+          toast.toast({
+            title: 'Error',
+            description: (
+              <span className="text-destructive-foreground">
+                Translations file has been detected but cannot be loaded.
+              </span>
+            ),
+            action: <Button onClick={onOpenLogs}>Open logs</Button>,
+          })
         }
 
         setLastMcmConfigPath(configPath)
@@ -67,6 +83,7 @@ export function useLoadConfig() {
       } else {
         console.log(parseResult.error, parseResult.error.errors)
         await logText('Cannot parse config.json. The config file does not meet the McmHelper format.', 'error')
+        await logText(`Error: ${JSON.stringify(parseResult.error.errors, null, 2)}`, 'error')
         toast.toast({
           title: 'Error',
           description: <span className="text-destructive-foreground">Invalid config.json. Check the logs.</span>,
@@ -74,6 +91,6 @@ export function useLoadConfig() {
         })
       }
     },
-    [setMcmConfig, setLastMcmConfigPath, setTranslations, toast.toast],
+    [setMcmConfig, setLastMcmConfigPath, setTranslations, toast.toast, onOpenLogs],
   )
 }

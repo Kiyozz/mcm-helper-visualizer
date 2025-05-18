@@ -1,3 +1,3 @@
 export default function Welcome() {
-  return <h1 className="text-xl">Welcome to McmHelper Visualizer. Load your McmHelper config.json here</h1>
+  return <h1 className="text-xl">Select a McmHelper config.json</h1>
 }

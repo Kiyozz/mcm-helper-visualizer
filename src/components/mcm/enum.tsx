@@ -1,23 +1,34 @@
-import { McmHelperEnum } from '@/config.ts'
-import { DiamondIcon } from 'lucide-react'
-import { getHexColorFromText, removeColorTagFromText } from '@/lib/color-from-text.tsx'
 import ControlTextTooltip from '@/components/page/control-text-tooltip.tsx'
-import { Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog.tsx'
-import { Button } from '@/components/ui/button.tsx'
-import { useState } from 'react'
-import { cn } from '@/lib/utils.ts'
 import DisplayControlGroupConfig from '@/components/page/display-control-group-config.tsx'
-import { classnameByGroupBehavior } from '@/lib/classname-by-group-behavior.ts'
-import { useT } from '@/hooks/use-t.ts'
-import { useEvaluateGroupCondition } from '@/hooks/use-evaluate-group-condition.ts'
 import HelpText from '@/components/page/help-text.tsx'
+import { Button } from '@/components/ui/button.tsx'
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog.tsx'
+import { McmHelperEnum } from '@/config.ts'
+import { useEvaluateGroupCondition } from '@/hooks/use-evaluate-group-condition.ts'
+import { useT } from '@/hooks/use-t.ts'
+import { classnameByGroupBehavior } from '@/lib/classname-by-group-behavior.ts'
+import { getHexColorFromText, removeColorTagFromText } from '@/lib/color-from-text.tsx'
+import { cn } from '@/lib/utils.ts'
+import { DiamondIcon } from 'lucide-react'
+import { useState } from 'react'
 
 export default function Enum({ control, isAfterHeader }: { control: McmHelperEnum; isAfterHeader: boolean }) {
   const t = useT()
   const evaluateCondition = useEvaluateGroupCondition()
   const text = t(control.text)
   const { defaultValue, options, shortNames } = control.valueOptions
-  const defaultKeyToUse = (shortNames ?? options).at(0) ?? (shortNames ?? options).at(defaultValue === true ? 0 : defaultValue || 0) ?? 'value'
+  const defaultKeyToUse =
+    (shortNames ?? options).at(0) ??
+    (shortNames ?? options).at(defaultValue === true ? 0 : defaultValue || 0) ??
+    'value'
   const [currentValue, setCurrentValue] = useState<string>(defaultKeyToUse)
   const textToUse = t(currentValue)
   const isControlEvaluated = evaluateCondition(control.groupCondition)
@@ -39,7 +50,10 @@ export default function Enum({ control, isAfterHeader }: { control: McmHelperEnu
           )}
         >
           <ControlTextTooltip controlText={control.text} asChild>
-            <span className="flex grow items-center gap-2 overflow-hidden whitespace-nowrap" style={{ color: getHexColorFromText(text) }}>
+            <span
+              className="flex grow items-center gap-2 overflow-hidden whitespace-nowrap"
+              style={{ color: getHexColorFromText(text) }}
+            >
               <span>{removeColorTagFromText(text)}</span>
               <DisplayControlGroupConfig control={control} />
             </span>
@@ -51,7 +65,7 @@ export default function Enum({ control, isAfterHeader }: { control: McmHelperEnu
           <HelpText control={control} />
         </button>
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent aria-describedby={undefined}>
         <DialogHeader>
           <DialogTitle className="text-center uppercase">{removeColorTagFromText(text)}</DialogTitle>
         </DialogHeader>
@@ -71,7 +85,12 @@ export default function Enum({ control, isAfterHeader }: { control: McmHelperEnu
                 }}
               >
                 <div className="relative">
-                  <DiamondIcon className={cn('absolute -left-4 top-[calc(50%+1px)] h-3 w-3 -translate-y-1/2 fill-foreground', !active && 'hidden')} />
+                  <DiamondIcon
+                    className={cn(
+                      'absolute -left-4 top-[calc(50%+1px)] h-3 w-3 -translate-y-1/2 fill-foreground',
+                      !active && 'hidden',
+                    )}
+                  />
                   <span>{removeColorTagFromText(optionText)}</span>
                 </div>
               </Button>

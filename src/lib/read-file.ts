@@ -1,18 +1,18 @@
-import { invoke } from '@tauri-apps/api'
+import { invoke } from "@tauri-apps/api/core";
 
 export async function readFile(path: string) {
-  const fileContent: string | null = await invoke('read_file', { path })
+	const fileContent: string | null = await invoke("read_file", { path });
 
-  if (fileContent === null) return
+	if (fileContent === null) return;
 
-  let fileAsJson: unknown
+	let fileAsJson: unknown;
 
-  try {
-    fileAsJson = JSON.parse(fileContent)
-  } catch (err) {
-    // TODO: handle error
-    throw err
-  }
+	try {
+		fileAsJson = JSON.parse(fileContent);
+	} catch (err) {
+		// TODO: handle error
+		throw err;
+	}
 
-  return fileAsJson
+	return fileAsJson;
 }

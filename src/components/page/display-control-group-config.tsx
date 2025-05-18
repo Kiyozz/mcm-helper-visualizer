@@ -5,10 +5,14 @@ export default function DisplayControlGroupConfig({ control }: { control: McmHel
   return (
     <>
       {control.groupCondition !== undefined && (
-        <span className="text-xs italic text-slate-400">(Conditioned {groupConditionAsString(control.groupCondition)})</span>
+        <span className="text-slate-400 text-xs italic">
+          (Conditioned {groupConditionAsString(control.groupCondition)})
+        </span>
       )}
 
-      {control.groupBehavior !== undefined && <span className="text-xs italic text-slate-400">(Behavior {control.groupBehavior})</span>}
+      {control.groupBehavior !== undefined && (
+        <span className="text-slate-400 text-xs italic">(Behavior {control.groupBehavior})</span>
+      )}
     </>
   )
 }

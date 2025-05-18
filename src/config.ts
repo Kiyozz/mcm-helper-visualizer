@@ -80,7 +80,14 @@ const TextSourceSchema = z
   .optional()
 
 const SourceTypeSchema = z.object({
-  sourceType: z.union([z.literal('GlobalValue'), z.literal('ModSettingBool'), z.literal('ModSettingFloat'), z.literal('ModSettingInt')]).optional(),
+  sourceType: z
+    .union([
+      z.literal('GlobalValue'),
+      z.literal('ModSettingBool'),
+      z.literal('ModSettingFloat'),
+      z.literal('ModSettingInt'),
+    ])
+    .optional(),
 })
 
 const SourceTypeScriptNameSchema = z.object({
@@ -106,7 +113,7 @@ const SourceSchema = z
 
 const HeaderSchema = z.object({
   type: z.literal('header'),
-  text: z.string(),
+  text: z.string().default(''),
   help: z.string().optional(),
 })
 

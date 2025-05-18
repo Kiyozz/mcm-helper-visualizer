@@ -1,4 +1,4 @@
-import { open } from '@tauri-apps/api/dialog'
+import { open } from '@tauri-apps/plugin-dialog'
 import { readTranslationsFromPath } from '@/lib/read-translations-from-path.ts'
 import { Button } from '@/components/ui/button.tsx'
 import { useTranslations } from '@/hooks/use-translations.ts'

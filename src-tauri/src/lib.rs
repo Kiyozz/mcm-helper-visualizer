@@ -1,12 +1,15 @@
 // Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
+use log::{debug, error, info, log};
 use std::collections::HashMap;
 use std::fs;
 use std::path::Path;
-use utf16string::{WString};
 use std::time::SystemTime;
-use log::{debug, info, log, error};
+use tauri::path::PathResolver;
+use tauri::{AppHandle, Manager, Wry};
+use tauri_plugin_opener::OpenerExt;
+use utf16string::WString;
 
 #[tauri::command]
 fn read_file(path: &str) -> Option<String> {
@@ -62,7 +65,7 @@ fn read_translations(path: &str) -> Option<HashMap<String, String>> {
             }
 
             Some(map)
-        },
+        }
         Err(err) => {
             print!("{:?}", err);
 
@@ -77,6 +80,15 @@ fn path_exists(path: &str) -> bool {
 }
 
 #[tauri::command]
+fn open_log_dir(app_handle: AppHandle) -> Result<(), tauri_plugin_opener::Error> {
+    let log_dir = app_handle.path().app_log_dir()?;
+
+    app_handle
+        .opener()
+        .open_path(log_dir.to_str().unwrap(), None::<String>)
+}
+
+#[tauri::command]
 fn log_text(text: &str, level: Option<&str>) {
     let level = match level {
         Some(level) => match level {
@@ -85,15 +97,15 @@ fn log_text(text: &str, level: Option<&str>) {
             "info" => log::Level::Info,
             "debug" => log::Level::Debug,
             "trace" => log::Level::Trace,
-            _ => log::Level::Info
+            _ => log::Level::Info,
         },
-        None => log::Level::Info
+        None => log::Level::Info,
     };
 
     log!(level, "{}", text);
 }
 
-fn setup_logger(path_resolver: &tauri::PathResolver) -> Result<(), fern::InitError> {
+fn setup_logger(path_resolver: &PathResolver<Wry>) -> Result<(), fern::InitError> {
     let log_dir = path_resolver.app_log_dir().expect("cannot get log dir");
     let log_file = log_dir.join("app.log");
 
@@ -126,14 +138,24 @@ fn setup_logger(path_resolver: &tauri::PathResolver) -> Result<(), fern::InitErr
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
+        .plugin(tauri_plugin_opener::init())
+        .plugin(tauri_plugin_dialog::init())
+        .plugin(tauri_plugin_shell::init())
+        .plugin(tauri_plugin_clipboard_manager::init())
         .setup(|app| {
-            setup_logger(&app.path_resolver()).expect("failed to setup logger");
+            setup_logger(app.path()).expect("failed to setup logger");
 
             info!("Application setup");
 
             Ok(())
         })
-        .invoke_handler(tauri::generate_handler![read_file, read_translations, path_exists, log_text])
+        .invoke_handler(tauri::generate_handler![
+            read_file,
+            read_translations,
+            path_exists,
+            log_text,
+            open_log_dir
+        ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

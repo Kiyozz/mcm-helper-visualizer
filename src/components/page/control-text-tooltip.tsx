@@ -1,7 +1,8 @@
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger, type TooltipTriggerProps } from '@/components/ui/tooltip.tsx'
 import { type ElementRef, forwardRef, useEffect, useState } from 'react'
-import { clipboard } from '@tauri-apps/api'
+import {  } from '@tauri-apps/api'
 import { CopyIcon } from 'lucide-react'
+import * as clipboard from "@tauri-apps/plugin-clipboard-manager"
 
 const ControlTextTooltip = forwardRef<ElementRef<typeof TooltipTrigger>, { controlText: string } & TooltipTriggerProps>(
   ({ controlText, children, ...props }, ref) => {
